@@ -78,6 +78,37 @@
           </div>
         </div>
       </div>
+
+      <?php
+      // Sample two-dimensional array
+      $lugaresEstacionamento = [
+        [0, 1, 1, 1, 0, 1],
+        [2, 2, 2, 2, 2, 2],
+        [0, 1, 1, 1, 0, 2],
+        [0, 1, 1, 1, 0, 2],
+      ];
+
+      // Serialize the two-dimensional array
+      $data = serialize($lugaresEstacionamento);
+
+      // Specify the file path
+      $filename = 'lugaresEstacionamento.txt';
+
+      // Write the serialized data to the file
+      file_put_contents($filename, $data);
+      ?>
+
+      <?php
+      // Specify the file path
+      $filename = 'lugaresEstacionamento.txt';
+
+      // Read the serialized data from the file
+      $data = file_get_contents($filename);
+
+      // Unserialize the data to retrieve the two-dimensional array
+      $lugaresEstacionamento = unserialize($data);
+      ?>
+
       <div class="col-sm-8">
         <div class="card">
           <div class="card-header">
@@ -86,38 +117,25 @@
           <div class="card-body">
             <table class="table">
               <tbody>
-                <tr>
-                  <td class="lugar rotate-image" style="width:16.66%"><img src="carro.png" height="100px"> </td>
-                  <td class="lugar rotate-image" style="width:16.66%"></td>
-                  <td class="lugar rotate-image" style="width:16.66%"><img src="carro.png" height="100px"></td>
-                  <td class="lugar rotate-image" style="width:16.66%"><img src="carro.png" height="100px"></td>
-                  <td class="lugar rotate-image" style="width:16.66%"><img src="carro.png" height="100px"></td>
-                  <td class="" style="width:16.66%"></td>
-                </tr>
-                <tr>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                </tr>
-                <tr>
-                  <td class="lugar" style="width:16.66%"><img src="carro.png" height="100px"> </td>
-                  <td class="lugar" style="width:16.66%"></td>
-                  <td class="lugar" style="width:16.66%"><img src="carro.png" height="100px"></td>
-                  <td class="lugar" style="width:16.66%"><img src="carro.png" height="100px"></td>
-                  <td class="lugar" style="width:16.66%"><img src="carro.png" height="100px"></td>
-                  <td class="" style="width:16.66%"></td>
-                </tr>
-                <tr>
-                  <td class="lugar rotate-image" style="width:16.66%"><img src="carro.png" height="100px"> </td>
-                  <td class="lugar rotate-image" style="width:16.66%"></td>
-                  <td class="lugar rotate-image" style="width:16.66%"><img src="carro.png" height="100px"></td>
-                  <td class="lugar rotate-image" style="width:16.66%"><img src="carro.png" height="100px"></td>
-                  <td class="lugar rotate-image" style="width:16.66%"><img src="carro.png" height="100px"></td>
-                  <td class="" style="width:16.66%"></td>
-                </tr>
+                <?php foreach ($lugaresEstacionamento as $linha) {
+                  echo "<tr>";
+
+                  foreach ($linha as $posicao) {
+                    if ($posicao == 1) {
+                      echo "<td class=\"lugar rotate-image\" style=\"width:16.66%\"><img src=\"carro.png\" height=\"100px\"></td>";
+                    }
+                    if ($posicao == 0) {
+                      echo "<td class=\"lugar rotate-image\" style=\"width:16.66%\"></td>";
+                    }
+                    if ($posicao == 2) {
+                      echo "<td style=\"width:16.66%\"></td>";
+                    }
+                  }
+
+                  echo "</tr>";
+                }
+                ?>
+
               </tbody>
             </table>
           </div>
