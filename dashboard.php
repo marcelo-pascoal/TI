@@ -16,7 +16,16 @@
     header("refresh:5;url=index.php");
     die("Acesso restrito.");
   }
+  $apiUrl = 'http://127.0.0.1/projeto/api.php';
+  $params = [
+    'ref' => 'lugares'
+  ];
+  $urlWithParams = $apiUrl . '?' . http_build_query($params);
+  $data = file_get_contents($urlWithParams);
+  $lugaresEstacionamento = json_decode($data, true);
   ?>
+
+
   <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
       <a class="navbar-brand" href="#">Estacionamento</a>
@@ -79,35 +88,7 @@
         </div>
       </div>
 
-      <?php
-      // Sample two-dimensional array
-      $lugaresEstacionamento = [
-        [3, 1, 1, 1, 3, 1],
-        [0, 0, 0, 0, 0, 0],
-        [-1, 2, 2, 2,-1, 0],
-        [3, 1, 1, 1, 3, 0],
-      ];
 
-      // Serialize the two-dimensional array
-      $data = serialize($lugaresEstacionamento);
-
-      // Specify the file path
-      $filename = 'lugaresEstacionamento.txt';
-
-      // Write the serialized data to the file
-      file_put_contents($filename, $data);
-      ?>
-
-      <?php
-      // Specify the file path
-      $filename = 'lugaresEstacionamento.txt';
-
-      // Read the serialized data from the file
-      $data = file_get_contents($filename);
-
-      // Unserialize the data to retrieve the two-dimensional array
-      $lugaresEstacionamento = unserialize($data);
-      ?>
 
       <div class="col-sm-8">
         <div class="card">
@@ -119,31 +100,26 @@
               <tbody>
                 <?php foreach ($lugaresEstacionamento as $linha) {
                   echo "<tr>";
-                  
+
                   foreach ($linha as $posicao) {
-                  switch($posicao) {
-  case -1 :
-    echo "<td class=\"lugar\" style=\"width:16.66%\"></td>";
-    break;
-  case 0 :
-    echo "<td style=\"width:16.66%\"></td>";
-    break;
-  case 1 :
-     echo "<td class=\"lugar rotate-image\" style=\"width:16.66%\"><img src=\"carro.png\" height=\"100px\"></td>";
-    break;
-  case 2 :
-    echo "<td class= \"lugar\" style=\"width:16.66%\"><img src=\"carro.png\" height=\"100px\"></td>";
-    break;
-  case 3 :
-    echo "<td class=\"lugar rotate-image\" style=\"width:16.66%\"></td>";
-    break;
-  
-
-} 
-}
-
-          
-
+                    switch ($posicao) {
+                      case -1:
+                        echo "<td class=\"lugar\" style=\"width:16.66%\"></td>";
+                        break;
+                      case 0:
+                        echo "<td style=\"width:16.66%\"></td>";
+                        break;
+                      case 1:
+                        echo "<td class=\"lugar rotate-image\" style=\"width:16.66%\"><img src=\"carro.png\" height=\"100px\"></td>";
+                        break;
+                      case 2:
+                        echo "<td class= \"lugar\" style=\"width:16.66%\"><img src=\"carro.png\" height=\"100px\"></td>";
+                        break;
+                      case 3:
+                        echo "<td class=\"lugar rotate-image\" style=\"width:16.66%\"></td>";
+                        break;
+                    }
+                  }
                   echo "</tr>";
                 }
                 ?>
@@ -156,7 +132,7 @@
     </div>
   </div>
   <br>
- 
+
 </body>
 
 </html>
