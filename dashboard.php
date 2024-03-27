@@ -51,10 +51,10 @@
       <div class="col-sm-2">
         <div class="card">
           <div class="card-header sensor">
-            <h4>Temperatura 40°</h4>
+            <h5>Temperatura 40°</h5>
           </div>
           <div class="card-body">
-            <img src="temperature-high.png" width="20px">
+            <img src="temperature-high.png" width="50px">
           </div>
           <div class="card-footer">
             <h6><b>Atualização:</b> 2024/03/13 22:09 - <a href="temperatura.html">Histórico</a></h6>
@@ -62,10 +62,10 @@
         </div>
         <div class="card">
           <div class="card-header sensor">
-            <h4>Humidade 70°</h4>
+            <h5>Humidade 70°</h5>
           </div>
           <div class="card-body">
-            <img src="humidity-high.png">
+            <img src="humidity-high.png" width="50px">
           </div>
           <div class="card-footer">
             <h6><b>Atualização:</b> 2024/03/13 22:09 - <a href="humidade.html">Histórico</a></h6>
@@ -73,10 +73,10 @@
         </div>
         <div class="card">
           <div class="card-header atuador">
-            <h4>Led Arduino: Ligado</h4>
+            <h5>Led Arduino: Ligado</h5>
           </div>
           <div class="card-body">
-            <img src="light-on.png">
+            <img src="light-on.png" width="50px">
           </div>
           <div class="card-footer">
             <h6><b>Atualização:</b> 2024/03/13 22:09 - <a href="ledArduino.html">Histórico</a></h6>
