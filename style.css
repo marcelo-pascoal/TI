@@ -1,0 +1,25 @@
+.sensor{
+    background-color: #93baff;
+}
+.atuador{
+    background-color: #ffbf6c;
+}
+body{
+    margin-bottom: 50px;
+}
+
+td{
+    height: 100px;
+    width: 50;
+}
+
+.lugar{
+    border-left: solid;
+    border-right: solid;
+    
+}
+
+.table {
+    table-layout: auto;
+    width: 100%;
+}

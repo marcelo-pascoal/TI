@@ -38,14 +38,6 @@
       </div>
     </div>
   </nav>
-  <div class="container d-flex justify-content-around align-items-center">
-    <div id="title-header">
-      <h1>Servidor IoT</h1>
-      <h6>user: Alexandre Lopes</h6>
-    </div>
-    <img src="estg.png" width="300">
-  </div>
-  <hr>
   <div class="container">
     <div class="row text-center">
       <div class="col-sm-2">
@@ -90,32 +82,32 @@
           </div>
           <div class="card-body">
             <table class="table">
-              <thead>
-                <tr>
-                  <th scope="col">Tipo de Dispositivo IoT</th>
-                  <th scope="col">Valor</th>
-                  <th scope="col">Data de Avaliação</th>
-                  <th scope="col">Estado Alertas</th>
-                </tr>
-              </thead>
               <tbody>
                 <tr>
-                  <td>Temperatura</td>
-                  <td>40°</td>
-                  <td>2024/03/13 22:09</td>
-                  <td><button type="button" class="btn rounded-pill btn-danger btn-sm">Elevada</button></td>
+                  <td class="lugar" style="width:16.66%"><img src="carro.png" height="100px"> </td>
+                  <td class="lugar" style="width:16.66%"></td>
+                  <td class="lugar" style="width:16.66%"><img src="carro.png" height="100px"></td>
+                  <td class="lugar" style="width:16.66%"><img src="carro.png" height="100px"></td>
+                  <td class="lugar" style="width:16.66%"><img src="carro.png" height="100px"></td>
+                  <td class="lugar" style="width:16.66%"></td>
                 </tr>
                 <tr>
-                  <td>Humidade</td>
-                  <td>70°</td>
-                  <td>2024/03/13 22:09</td>
-                  <td><button type="button" class="btn rounded-pill btn-info btn-sm">Normal</button></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></button></td>
                 </tr>
                 <tr>
-                  <td>Led Arduino</td>
-                  <td>Ligado</td>
-                  <td>2024/03/13 22:09</td>
-                  <td><button type="button" class="btn rounded-pill btn-primary btn-sm">Ligado</button></td>
+                  <td><img src="carro.png" height="100px"> </td>
+                  <td></td>
+                  <td><img src="carro.png" height="100px"></td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td><img src="carro.png" height="100px"> </td>
+                  <td></td>
+                  <td><img src="carro.png" height="100px"></td>
+                  <td></td>
                 </tr>
               </tbody>
             </table>
