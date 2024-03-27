@@ -43,21 +43,24 @@
       <div class="col-sm-2">
         <div class="card">
           <div class="card-header sensor">
-            <h5>Temperatura 40°</h5>
+            <div class="row">
+              <h6><img src="temperature-high.png" width="20px">
+                Temperatura</h6>
+            </div>
           </div>
           <div class="card-body">
-            <img src="temperature-high.png" width="50px">
+            <h1>24ºC</h1>
           </div>
           <div class="card-footer">
-            <h6><b>Atualização:</b> 2024/03/13 22:09 - <a href="temperatura.html">Histórico</a></h6>
+            <h6><a href="temperatura.html">Histórico</a></h6>
           </div>
         </div>
         <div class="card">
           <div class="card-header sensor">
-            <h5>Humidade 70°</h5>
+            <h6>Humidade 70°</h6>
           </div>
           <div class="card-body">
-            <img src="humidity-high.png" width="50px">
+            <img src="humidity-high.png" width="40px">
           </div>
           <div class="card-footer">
             <h6><b>Atualização:</b> 2024/03/13 22:09 - <a href="humidade.html">Histórico</a></h6>
@@ -65,10 +68,10 @@
         </div>
         <div class="card">
           <div class="card-header atuador">
-            <h5>Led Arduino: Ligado</h5>
+            <h6>Iluminação</h6>
           </div>
           <div class="card-body">
-            <img src="light-on.png" width="50px">
+            <img src="light-on.png" width="40px">
           </div>
           <div class="card-footer">
             <h6><b>Atualização:</b> 2024/03/13 22:09 - <a href="ledArduino.html">Histórico</a></h6>
@@ -84,30 +87,36 @@
             <table class="table">
               <tbody>
                 <tr>
+                  <td class="lugar rotate-image" style="width:16.66%"><img src="carro.png" height="100px"> </td>
+                  <td class="lugar rotate-image" style="width:16.66%"></td>
+                  <td class="lugar rotate-image" style="width:16.66%"><img src="carro.png" height="100px"></td>
+                  <td class="lugar rotate-image" style="width:16.66%"><img src="carro.png" height="100px"></td>
+                  <td class="lugar rotate-image" style="width:16.66%"><img src="carro.png" height="100px"></td>
+                  <td class="" style="width:16.66%"></td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr>
                   <td class="lugar" style="width:16.66%"><img src="carro.png" height="100px"> </td>
                   <td class="lugar" style="width:16.66%"></td>
                   <td class="lugar" style="width:16.66%"><img src="carro.png" height="100px"></td>
                   <td class="lugar" style="width:16.66%"><img src="carro.png" height="100px"></td>
                   <td class="lugar" style="width:16.66%"><img src="carro.png" height="100px"></td>
-                  <td class="lugar" style="width:16.66%"></td>
+                  <td class="" style="width:16.66%"></td>
                 </tr>
                 <tr>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></button></td>
-                </tr>
-                <tr>
-                  <td><img src="carro.png" height="100px"> </td>
-                  <td></td>
-                  <td><img src="carro.png" height="100px"></td>
-                  <td></td>
-                </tr>
-                <tr>
-                  <td><img src="carro.png" height="100px"> </td>
-                  <td></td>
-                  <td><img src="carro.png" height="100px"></td>
-                  <td></td>
+                  <td class="lugar rotate-image" style="width:16.66%"><img src="carro.png" height="100px"> </td>
+                  <td class="lugar rotate-image" style="width:16.66%"></td>
+                  <td class="lugar rotate-image" style="width:16.66%"><img src="carro.png" height="100px"></td>
+                  <td class="lugar rotate-image" style="width:16.66%"><img src="carro.png" height="100px"></td>
+                  <td class="lugar rotate-image" style="width:16.66%"><img src="carro.png" height="100px"></td>
+                  <td class="" style="width:16.66%"></td>
                 </tr>
               </tbody>
             </table>
