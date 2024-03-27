@@ -57,24 +57,24 @@
         </div>
         <div class="card">
           <div class="card-header sensor">
-            <h6>Humidade 70°</h6>
+            <h6><img src="humidity-high.png" width="20px">Humidade</h6>
           </div>
           <div class="card-body">
-            <img src="humidity-high.png" width="40px">
+            <h1>50%</h1>
           </div>
           <div class="card-footer">
-            <h6><b>Atualização:</b> 2024/03/13 22:09 - <a href="humidade.html">Histórico</a></h6>
+            <h6><a href="humidade.html">Histórico</a></h6>
           </div>
         </div>
         <div class="card">
           <div class="card-header atuador">
-            <h6>Iluminação</h6>
+            <h6><img src="light-on.png" width="20px">Iluminação</h6>
           </div>
           <div class="card-body">
-            <img src="light-on.png" width="40px">
+            <h1>20%</h1>
           </div>
           <div class="card-footer">
-            <h6><b>Atualização:</b> 2024/03/13 22:09 - <a href="ledArduino.html">Histórico</a></h6>
+            <h6><a href="ledArduino.html">Histórico</a></h6>
           </div>
         </div>
       </div>
