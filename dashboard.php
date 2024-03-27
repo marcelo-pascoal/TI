@@ -82,10 +82,10 @@
       <?php
       // Sample two-dimensional array
       $lugaresEstacionamento = [
-        [0, 1, 1, 1, 0, 1],
-        [2, 2, 2, 2, 2, 2],
-        [0, 1, 1, 1, 0, 2],
-        [0, 1, 1, 1, 0, 2],
+        [3, 1, 1, 1, 3, 1],
+        [0, 0, 0, 0, 0, 0],
+        [-1, 2, 2, 2,-1, 0],
+        [3, 1, 1, 1, 3, 0],
       ];
 
       // Serialize the two-dimensional array
@@ -119,17 +119,46 @@
               <tbody>
                 <?php foreach ($lugaresEstacionamento as $linha) {
                   echo "<tr>";
+                  /* switch($posicao) {
+  case -1 :
+    echo "<td class=\"lugar\" style=\"width:16.66%\"></td>";
+    break;
+  case 0 :
+    echo "<td style=\"width:16.66%\"></td>";
+    break;
+  case 1 :
+     echo "<td class=\"lugar rotate-image\" style=\"width:16.66%\"><img src=\"carro.png\" height=\"100px\"></td>";
+    break;
+  case 2 :
+    echo "<td class= \"lugar\" style=\"width:16.66%\"><img src=\"carro.png\" height=\"100px\"></td>";
+    break;
+  case 3 :
+    echo "<td class=\"lugar rotate-image\" style=\"width:16.66%\"></td>";
+    break;
+  default:
+
+} 
+*/
 
                   foreach ($linha as $posicao) {
-                    if ($posicao == 1) {
-                      echo "<td class=\"lugar rotate-image\" style=\"width:16.66%\"><img src=\"carro.png\" height=\"100px\"></td>";
-                    }
                     if ($posicao == 0) {
-                      echo "<td class=\"lugar rotate-image\" style=\"width:16.66%\"></td>";
-                    }
-                    if ($posicao == 2) {
                       echo "<td style=\"width:16.66%\"></td>";
+                      
+                      
+                    } else if ($posicao == 1) {
+                      echo "<td class=\"lugar rotate-image\" style=\"width:16.66%\"><img src=\"carro.png\" height=\"100px\"></td>";
+                      
+                      
+                    } else if ($posicao == 2) {
+                      echo "<td class= \"lugar\" style=\"width:16.66%\"><img src=\"carro.png\" height=\"100px\"></td>";
+                      
+                    } else if ($posicao == 3){
+                      echo "<td class=\"lugar rotate-image\" style=\"width:16.66%\"></td>";
+
+                    } else if ($posicao == -1){
+                      echo "<td class=\"lugar\" style=\"width:16.66%\"></td>";
                     }
+
                   }
 
                   echo "</tr>";
@@ -144,7 +173,7 @@
     </div>
   </div>
   <br>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+ 
 </body>
 
 </html>
