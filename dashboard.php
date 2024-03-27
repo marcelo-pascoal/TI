@@ -119,7 +119,9 @@
               <tbody>
                 <?php foreach ($lugaresEstacionamento as $linha) {
                   echo "<tr>";
-                  /* switch($posicao) {
+                  
+                  foreach ($linha as $posicao) {
+                  switch($posicao) {
   case -1 :
     echo "<td class=\"lugar\" style=\"width:16.66%\"></td>";
     break;
@@ -135,31 +137,12 @@
   case 3 :
     echo "<td class=\"lugar rotate-image\" style=\"width:16.66%\"></td>";
     break;
-  default:
+  
 
 } 
-*/
+}
 
-                  foreach ($linha as $posicao) {
-                    if ($posicao == 0) {
-                      echo "<td style=\"width:16.66%\"></td>";
-                      
-                      
-                    } else if ($posicao == 1) {
-                      echo "<td class=\"lugar rotate-image\" style=\"width:16.66%\"><img src=\"carro.png\" height=\"100px\"></td>";
-                      
-                      
-                    } else if ($posicao == 2) {
-                      echo "<td class= \"lugar\" style=\"width:16.66%\"><img src=\"carro.png\" height=\"100px\"></td>";
-                      
-                    } else if ($posicao == 3){
-                      echo "<td class=\"lugar rotate-image\" style=\"width:16.66%\"></td>";
-
-                    } else if ($posicao == -1){
-                      echo "<td class=\"lugar\" style=\"width:16.66%\"></td>";
-                    }
-
-                  }
+          
 
                   echo "</tr>";
                 }
