@@ -73,12 +73,12 @@
     <div class="row text-center">
       <div class="col-sm-2">
         <div class="card">
-          <div class="card-header sensor">
+          <div class="card-header">
             <div class="row">
               <h6><img src=<?php
-                          if ($valor_temperatura >= 20) echo "imagens/temperature-high.png ";
-                          else echo "imagens/temperature-low.png";
-                          ?>  width="20px"> Temperatura</h6>
+                            if ($valor_temperatura >= 20) echo "imagens/temperature-high.png ";
+                            else echo "imagens/temperature-low.png";
+                            ?> width="20px"> Temperatura</h6>
             </div>
           </div>
           <div class="card-body">
@@ -89,7 +89,7 @@
           </div>
         </div>
         <div class="card">
-          <div class="card-header sensor">
+          <div class="card-header">
             <h6><img src=<?php
                           if ($valor_humidade >= 50) echo "imagens/humidity-high.png ";
                           else echo "imagens/humidity-low.png";
@@ -103,7 +103,7 @@
           </div>
         </div>
         <div class="card">
-          <div class="card-header atuador">
+          <div class="card-header">
             <h6><img src=<?php
                           if ($valor_iluminacao) echo "imagens/light-on.png";
                           else echo "imagens/light-off.png";
