@@ -13,7 +13,7 @@ header('Content-Type: text/html; charset=utf-8');
 $checkRef = array("lugares");
 
 # Carregamento de variaveis
-$lugaresEstacionamento = unserialize(file_get_contents('lugaresEstacionamento.txt'));
+$lugares = unserialize(file_get_contents('files/lugares.txt'));
 
 ####Caso seja rececionado um pedido GET
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             switch ($ref) {
                 case "lugares":
                     http_response_code(200);
-                    echo json_encode($lugaresEstacionamento);
+                    echo json_encode($lugares);
                     break;
             }
         }
@@ -43,7 +43,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         die("Dados incorrectos");
     }
 } elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    
+
+    #  O código de resposta é colocado 400 (bad response) antes de verificar o pedido
+    http_response_code(400);
+    #  Caso a variavel 'ref' (referência) e 'ident' (identificador) estejam definidos no pedido
+    if (isset($_POST['ref']) && isset($_POST['x']) && isset($_POST['y']) && isset($_POST['valor'])) {
+        $ref = $_POST['ref'];
+        $x = $_POST['x'];
+        $x = $_POST['y'];
+        $valor = $_POST['valor'];
+        $lugares[$x][$y] = $valor;
+
+        $data = serialize($lugares);
+
+        // Specify the file path
+        $filename = 'lugares.txt';
+
+        // Write the serialized data to the file
+        file_put_contents($filename, $data);
+    }
+
 
     #caso não seja um pedido GET ou POST é retornado o código 403 (nao permitido)
 } else http_response_code(403);

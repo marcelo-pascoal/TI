@@ -10,19 +10,20 @@
 </head>
 
 <body>
+
   <?php
   session_start();
   if (!isset($_SESSION['username'])) {
     header("refresh:5;url=index.php");
     die("Acesso restrito.");
   }
-  $apiUrl = 'http://127.0.0.1/projeto/api.php';
+  $apiUrl = 'http://127.0.0.1/projeto/api/api.php';
   $params = [
     'ref' => 'lugares'
   ];
   $urlWithParams = $apiUrl . '?' . http_build_query($params);
   $data = file_get_contents($urlWithParams);
-  $lugaresEstacionamento = json_decode($data, true);
+  $lugares = json_decode($data, true);
   ?>
 
 
@@ -53,7 +54,7 @@
         <div class="card">
           <div class="card-header sensor">
             <div class="row">
-              <h6><img src="temperature-high.png" width="20px">
+              <h6><img src="imagens/temperature-high.png" width="20px">
                 Temperatura</h6>
             </div>
           </div>
@@ -66,7 +67,7 @@
         </div>
         <div class="card">
           <div class="card-header sensor">
-            <h6><img src="humidity-high.png" width="20px">Humidade</h6>
+            <h6><img src="imagens/humidity-high.png" width="20px">Humidade</h6>
           </div>
           <div class="card-body">
             <h1>50%</h1>
@@ -77,7 +78,7 @@
         </div>
         <div class="card">
           <div class="card-header atuador">
-            <h6><img src="light-on.png" width="20px">Iluminação</h6>
+            <h6><img src="imagens/light-on.png" width="20px">Iluminação</h6>
           </div>
           <div class="card-body">
             <h1>20%</h1>
@@ -98,25 +99,19 @@
           <div class="card-body">
             <table class="table">
               <tbody>
-                <?php foreach ($lugaresEstacionamento as $linha) {
+                <?php foreach ($lugares as $linha) {
                   echo "<tr>";
 
                   foreach ($linha as $posicao) {
                     switch ($posicao) {
-                      case -1:
-                        echo "<td class=\"lugar\" style=\"width:16.66%\"></td>";
-                        break;
                       case 0:
                         echo "<td style=\"width:16.66%\"></td>";
                         break;
                       case 1:
-                        echo "<td class=\"lugar rotate-image\" style=\"width:16.66%\"><img src=\"carro.png\" height=\"100px\"></td>";
+                        echo "<td class=\"lugar livre\" style=\"width:16.66%\"><img src=\"imagens\lugar_vazio.png\" height=\"100px\"></td>";
                         break;
                       case 2:
-                        echo "<td class= \"lugar\" style=\"width:16.66%\"><img src=\"carro.png\" height=\"100px\"></td>";
-                        break;
-                      case 3:
-                        echo "<td class=\"lugar rotate-image\" style=\"width:16.66%\"></td>";
+                        echo "<td class=\"lugar ocupado\" style=\"width:16.66%\"><img src=\"imagens\lugar_ocupado.png\" height=\"100px\"></td>";
                         break;
                     }
                   }

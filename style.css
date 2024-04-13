@@ -14,19 +14,8 @@ td{
     border:none;
 }
 
-.lugar{
-    border-left: solid;
-    border-right: solid;
-    border-bottom:solid;
-}
-
 .table {
     table-layout: auto;
     width: 100%;
 }
 
-.rotate-image {
-      transform: rotate(180deg);
-      border-bottom: none;
-      border-top:solid;
-  }
