@@ -1,14 +1,14 @@
 <?php
-
+ 
 header('Content-Type: text/html; charset=utf-8');
-
+ 
 //echo $_SERVER['REQUEST_METHOD'];
 //var_dump(file_get_contents("php://input"));
-
+ 
 $lugares = unserialize(file_get_contents('files/lugares.txt'));
-
+ 
 http_response_code(400);
-
+ 
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
     //echo "recebi um POST<br>";
     //print_r($_POST);
@@ -30,7 +30,8 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         echo "faltam parametros no GET";
     }
 } else {
-
+ 
     http_response_code(403);
     echo "metodo nao permitido";
 }
+
