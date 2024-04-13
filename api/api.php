@@ -1,68 +1,36 @@
 <?php
-#   Verificação de sessão iniciada. (identico a dashboard.php)
-/*
-session_start();
-if (!isset($_SESSION['username'])) {
-    header("refresh:5;url=index.php");
-    die("Acesso restrito.");
-}
+
 header('Content-Type: text/html; charset=utf-8');
-*/
 
-#  A variável 'checkRef' será um array com as referências possíveis de chamada à api
-$checkRef = array("lugares");
+//echo $_SERVER['REQUEST_METHOD'];
+//var_dump(file_get_contents("php://input"));
 
-# Carregamento de variaveis
 $lugares = unserialize(file_get_contents('files/lugares.txt'));
 
-####Caso seja rececionado um pedido GET
-if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-    #  O código de resposta é colocado 400 (bad response) antes de verificar o pedido
-    http_response_code(400);
-    #  Caso a variavel 'ref' (referência) esteja definida no pedido
-    if (isset($_GET['ref'])) {
-        $ref = $_GET['ref'];
-        #  Verifica se ela é válida
-        if (in_array($ref, $checkRef)) {
-            switch ($ref) {
-                case "lugares":
-                    http_response_code(200);
-                    echo json_encode($lugares);
-                    break;
-            }
-        }
-        #Caso a referencia não seja válida
-        else {
-            header("refresh:5;url=./dashboard.php");
-            die("Dados incorrectos");
-        }
+http_response_code(400);
+
+if ($_SERVER['REQUEST_METHOD'] == "POST") {
+    //echo "recebi um POST<br>";
+    //print_r($_POST);
+    if (isset($_POST['nome']) && isset($_POST['valor']) && isset($_POST['hora']) && is_dir("files/" . $_POST['nome'])) { // verificar o metodo pela existencia de ficheiros
+        http_response_code(200);
+        file_put_contents("files/" . $_POST['nome'] . "/valor.txt", $_POST['valor']);
+        file_put_contents("files/" . $_POST['nome'] . "/hora.txt", $_POST['hora']);
+        file_put_contents("files/" . $_POST['nome'] . "/log.txt", $_POST['hora'] . ";" . $_POST['valor'] . PHP_EOL, FILE_APPEND);
     }
-    #Caso a referência não esteja definida no pedido
-    else {
-        header("refresh:5;url=./dashboard.php");
-        die("Dados incorrectos");
+} elseif ($_SERVER['REQUEST_METHOD'] == "GET") {
+    //echo "recebi um GET<br>";
+    if (isset($_GET['nome']) && is_dir("files/" . $_GET['nome'])) {
+        http_response_code(200);
+        echo file_get_contents("files/" . $_GET['nome'] . "/valor.txt");
+    } elseif ($_GET['nome'] == "lugares") {
+        http_response_code(200);
+        echo json_encode($lugares);
+    } else {
+        echo "faltam parametros no GET";
     }
-} elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
+} else {
 
-    #  O código de resposta é colocado 400 (bad response) antes de verificar o pedido
-    http_response_code(400);
-    #  Caso a variavel 'ref' (referência) e 'ident' (identificador) estejam definidos no pedido
-    if (isset($_POST['ref']) && isset($_POST['x']) && isset($_POST['y']) && isset($_POST['valor'])) {
-        $ref = $_POST['ref'];
-        $x = $_POST['x'];
-        $x = $_POST['y'];
-        $valor = $_POST['valor'];
-        $lugares[$x][$y] = $valor;
-
-        $data = serialize($lugares);
-
-        // Specify the file path
-        $filename = 'lugares.txt';
-
-        // Write the serialized data to the file
-        file_put_contents($filename, $data);
-    }
-
-
-    #caso não seja um pedido GET ou POST é retornado o código 403 (nao permitido)
-} else http_response_code(403);
+    http_response_code(403);
+    echo "metodo nao permitido";
+}

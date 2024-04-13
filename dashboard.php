@@ -10,7 +10,6 @@
 </head>
 
 <body>
-
   <?php
   session_start();
   if (!isset($_SESSION['username'])) {
@@ -19,17 +18,39 @@
   }
   $apiUrl = 'http://127.0.0.1/projeto/api/api.php';
   $params = [
-    'ref' => 'lugares'
+    'nome' => 'lugares'
   ];
   $urlWithParams = $apiUrl . '?' . http_build_query($params);
   $data = file_get_contents($urlWithParams);
   $lugares = json_decode($data, true);
+  $lugares_existentes = 0;
+  $lugares_ocupados = 0;
+  $lugares_livres = 0;
+
+  foreach ($lugares as $linha) {
+    foreach ($linha as $posicao) {
+      switch ($posicao) {
+        case 1:
+          $lugares_livres++;
+          $lugares_existentes++;
+          break;
+        case 2:
+          $lugares_ocupados++;
+          $lugares_existentes++;
+          break;
+      }
+    }
+  }
+
+  $valor_temperatura = file_get_contents("http://127.0.0.1/projeto/api/api.php?nome=temperatura");
+  $valor_humidade = file_get_contents("http://127.0.0.1/projeto/api/api.php?nome=humidade");
+  $valor_iluminacao = file_get_contents("http://127.0.0.1/projeto/api/api.php?nome=iluminacao");
   ?>
 
 
   <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#">Estacionamento</a>
+      <a class="navbar-brand" href="#">Veículo</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -59,7 +80,7 @@
             </div>
           </div>
           <div class="card-body">
-            <h1>24ºC</h1>
+            <h1><?php echo $valor_temperatura ?>ºC</h1>
           </div>
           <div class="card-footer">
             <h6><a href="temperatura.html">Histórico</a></h6>
@@ -70,7 +91,7 @@
             <h6><img src="imagens/humidity-high.png" width="20px">Humidade</h6>
           </div>
           <div class="card-body">
-            <h1>50%</h1>
+            <h1><?php echo $valor_humidade ?>%</h1>
           </div>
           <div class="card-footer">
             <h6><a href="humidade.html">Histórico</a></h6>
@@ -78,10 +99,16 @@
         </div>
         <div class="card">
           <div class="card-header atuador">
-            <h6><img src="imagens/light-on.png" width="20px">Iluminação</h6>
+            <h6><img src=<?php
+                          if ($valor_iluminacao) echo "imagens/light-on.png";
+                          else echo "imagens/light-off.png";
+                          ?> width="20px">Iluminação</h6>
           </div>
           <div class="card-body">
-            <h1>20%</h1>
+            <h1><?php
+                if ($valor_iluminacao) echo "ON";
+                else echo "OFF";
+                ?></h1>
           </div>
           <div class="card-footer">
             <h6><a href="ledArduino.html">Histórico</a></h6>
@@ -94,7 +121,22 @@
       <div class="col-sm-8">
         <div class="card">
           <div class="card-header">
-            <h4>Tabela de Sensores</h4>
+            <h4>Lugares</h4>
+            <div class="row">
+              <div class="col-sm-4">
+                <h6>Disponiveis</h6>
+                <h6><?php echo $lugares_livres ?></h6>
+              </div>
+              <div class="col-sm-4">
+                <h6>Ocupados</h6>
+                <h6><?php echo $lugares_ocupados ?></h6>
+              </div>
+              <div class="col-sm-4">
+                <h6>Em pé</h6>
+                <h6>1</h6>
+              </div>
+            </div>
+
           </div>
           <div class="card-body">
             <table class="table">
