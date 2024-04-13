@@ -120,6 +120,7 @@
           </div>
         </div>
       </div>
+      
 
 
 
@@ -143,6 +144,10 @@
             </div>
 
           </div>
+
+
+
+          
           <div class="card-body">
             <table class="table">
               <tbody>
@@ -167,13 +172,42 @@
                 ?>
 
               </tbody>
+              
+              
             </table>
+            
+            
           </div>
+          
+          
         </div>
+        
+        
       </div>
+
     </div>
+
+  
+        <div class="card top-right-card">
+          <div class="card-header">
+            <div class="row">
+              <h6>WebCam</h6>
+            </div>
+          </div>
+          <div class="card-body">
+          <img src="imagens/webcam.jpg">
+            
+          </div>
+         
+        </div>
+        </div>
+        
+    
   </div>
+
+  
   <br>
+  
 
 </body>
 

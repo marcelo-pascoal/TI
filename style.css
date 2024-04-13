@@ -20,21 +20,21 @@ td{
 }
 
 /*CHATGPT*/
-/* 1. Set body background color */
-body {
-    background-color: #f0f0f0;
-  }
+
+
   
   /* 2. Style navbar background and links */
   .navbar {
     background-color: #22588d;
   }
-  
+  /* palavra historico fica a branco*/
   .navbar a {
     color: #ffffff;
+    
   }
   
   /* 3. Style card headers */
+
   .card-header {
     background-color: #007bff;
     color: #ffffff;
@@ -51,6 +51,7 @@ body {
   }
   
   /* 6. Style card borders */
+  /* tira um bocado das bordas*/
   .card {
     border: 1px solid #dee2e6;
     border-radius: 0.25rem;
@@ -62,6 +63,7 @@ body {
   }
   
   /* 8. Style table rows */
+  /* separa as filas das cadeiras com linhas*/
   .table tr {
     border-bottom: 1px solid #dee2e6;
   }
@@ -72,12 +74,14 @@ body {
   }
   
   /* 10. Style links in card footers */
+  /* tira o sublinhado em card footers "historico"*/
   .card-footer a {
     color: #007bff;
     text-decoration: none;
   }
   
 /* 11. Style active navbar link */
+/* Home fica em bold*/
 .navbar .nav-link.active {
     font-weight: bold;
   }
@@ -100,6 +104,7 @@ body {
   }
   
   /* 15. Style card body text */
+  /* card body fica mais pequeno*/
   .card-body h1 {
     font-size: 2rem;
   }
@@ -115,6 +120,7 @@ body {
   }
   
   /* 18. Style table header */
+  /* header da table*/
   .table th {
     background-color: #007bff;
     color: #ffffff;
@@ -128,6 +134,25 @@ body {
   }
   
   /* 20. Style table cell padding */
+  /* separa as filas das cadeiras com 10 px*/
   .table td {
     padding: 10px;
   }
+
+
+
+
+
+  .top-right-card {
+    position: absolute;
+    top: 55px; /* Adjust top value as needed */
+    right: 50px; /* Adjust right value as needed */
+    width: 250px; /* Adjust width as needed */
+    height: 150px; /* Adjust height as needed */
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    text-align: center;
+   
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
