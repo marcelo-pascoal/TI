@@ -30,7 +30,6 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         echo "faltam parametros no GET";
     }
 } else {
- 
     http_response_code(403);
     echo "metodo nao permitido";
 }

@@ -16,7 +16,10 @@
     header("refresh:5;url=index.php");
     die("Acesso restrito.");
   }
-  $apiUrl = 'http://127.0.0.1/projeto/api/api.php';
+
+  $url = 'http://127.0.0.1/projeto';
+  //$url = 'http://iot.dei.estg.ipleiria.pt/ti/g168/projeto';
+  $apiUrl = $url . '/api/api.php';
   $params = [
     'nome' => 'lugares'
   ];
@@ -42,9 +45,9 @@
     }
   }
 
-  $valor_temperatura = file_get_contents("http://127.0.0.1/projeto/api/api.php?nome=temperatura");
-  $valor_humidade = file_get_contents("http://127.0.0.1/projeto/api/api.php?nome=humidade");
-  $valor_iluminacao = file_get_contents("http://127.0.0.1/projeto/api/api.php?nome=iluminacao");
+  $valor_temperatura = file_get_contents($url . "/api/api.php?nome=temperatura");
+  $valor_humidade = file_get_contents($url . "/api/api.php?nome=humidade");
+  $valor_iluminacao = file_get_contents($url . "/api/api.php?nome=iluminacao");
   ?>
 
 
@@ -85,7 +88,7 @@
             <h1><?php echo $valor_temperatura ?>ºC</h1>
           </div>
           <div class="card-footer">
-            <h6><a href="temperatura.html">Histórico</a></h6>
+            <h6><a href="historico.php?nome=temperatura">Histórico</a></h6>
           </div>
         </div>
         <div class="card">
@@ -99,7 +102,7 @@
             <h1><?php echo $valor_humidade ?>%</h1>
           </div>
           <div class="card-footer">
-            <h6><a href="humidade.html">Histórico</a></h6>
+            <h6><a href="historico.php?nome=humidade">Histórico</a></h6>
           </div>
         </div>
         <div class="card">
@@ -116,11 +119,11 @@
                 ?></h1>
           </div>
           <div class="card-footer">
-            <h6><a href="ledArduino.html">Histórico</a></h6>
+            <h6><a href="historico.php?nome=iluminacao">Histórico</a></h6>
           </div>
         </div>
       </div>
-      
+
 
 
 
@@ -147,7 +150,7 @@
 
 
 
-          
+
           <div class="card-body">
             <table class="table">
               <tbody>
@@ -172,42 +175,42 @@
                 ?>
 
               </tbody>
-              
-              
+
+
             </table>
-            
-            
+
+
           </div>
-          
-          
+
+
         </div>
-        
-        
+
+
       </div>
 
     </div>
 
-  
-        <div class="card top-right-card">
-          <div class="card-header">
-            <div class="row">
-              <h6>WebCam</h6>
-            </div>
-          </div>
-          <div class="card-body">
-          <img src="imagens/webcam.jpg">
-            
-          </div>
-         
+
+    <div class="card top-right-card">
+      <div class="card-header">
+        <div class="row">
+          <h6>WebCam</h6>
         </div>
-        </div>
-        
-    
+      </div>
+      <div class="card-body">
+        <img src="imagens/webcam.jpg">
+
+      </div>
+
+    </div>
   </div>
 
-  
+
+  </div>
+
+
   <br>
-  
+
 
 </body>
 
