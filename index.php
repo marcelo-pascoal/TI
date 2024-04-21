@@ -7,6 +7,7 @@
 #               o utilizador é redireccionado para o dashboard
 #               o username é defenido como variável de sessão para posterior verificação. 
 session_start();
+$loginFalhado = false;
 if (isset($_POST['username']) && isset($_POST['password'])) {
     $users = fopen("./users.txt", "r") or http_response_code(500) && die("Erro ao abrir ficheiro");
     while (!feof($users)) {
@@ -15,6 +16,8 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
             $_SESSION["username"] = $_POST['username'];
             fclose($users);
             header("Location: dashboard.php");
+        } else {
+            $loginFalhado = true;
         }
     }
     fclose($users);
@@ -46,7 +49,12 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
                     <label for="password" class="form-label">Password</label>
                     <input type="password" class="form-control" id="password" name="password" required>
                 </div>
-                <button type="submit" class="btn btn-primary">Login</button>
+                <div class="flex row">
+                    <?php if ($loginFalhado)
+                        echo '<p class="erro">Credenciais inválidas</p>';
+                    ?>
+                    <button type="submit" class="btn btn-primary">Login</button>
+                </div>
             </form>
         </div>
     </div>

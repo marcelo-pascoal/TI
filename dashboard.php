@@ -11,6 +11,8 @@
 </head>
 
 <body>
+
+
   <?php
   session_start();
   if (!isset($_SESSION['username'])) {
@@ -141,34 +143,30 @@
                 <h6>Ocupados</h6>
                 <h6><?php echo $lugares_ocupados ?></h6>
               </div>
-              <div class="col-sm-4">
-                <h6>Em pé</h6>
-                <h6>1</h6>
-              </div>
             </div>
-
           </div>
-
-
-
-
           <div class="card-body">
             <table class="table">
               <tbody>
                 <?php foreach ($lugares as $linha) {
                   echo "<tr>";
-
                   foreach ($linha as $posicao) {
-                    switch ($posicao) {
-                      case 0:
-                        echo "<td style=\"width:16.66%\"></td>";
-                        break;
-                      case 1:
-                        echo "<td class=\"lugar livre\" style=\"width:16.66%\"><img src=\"imagens\lugar_vazio.png\" height=\"100px\"></td>";
-                        break;
-                      case 2:
-                        echo "<td class=\"lugar ocupado\" style=\"width:16.66%\"><img src=\"imagens\lugar_ocupado.png\" height=\"100px\"></td>";
-                        break;
+                    if ($posicao == 0) {
+                      echo "<td></td>";
+                    } else {
+                      echo "<td class=\"lugar ";
+                      if ($posicao < 0) echo " ocupado ";
+                      echo "style=\"\"><img class=\"";
+                      switch (abs($posicao)) {
+                        case 2:
+                          echo " oeste ";
+                          break;
+                        case 3:
+                          echo " sul ";
+                          break;
+                      }
+
+                      echo "\" src=\"imagens\lugar.png\" widtht=\"100px\" height=\"100px\"></td>";
                     }
                   }
                   echo "</tr>";
