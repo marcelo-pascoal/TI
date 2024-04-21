@@ -21,6 +21,35 @@
         die("Historico Inexistente.");
     }
     ?>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Veículo</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link" href="historico.php">Histórico</a>
+          </li>
+        </ul>
+        <form class="d-flex" action="logout.php" method="post">
+          <button class="btn btn-outline-success" type="submit">Logout</button>
+        </form>
+      </div>
+    </div>
+  </nav>
+  <form action="/action_page.php">
+<select name="sensors">
+<option value="temperatura">Temperatura</option>
+<option value="humidade">Humidade</option>
+<option value="iluminacao">Iluminacao</option>
+<option value="portas">Portas</option>
+<option value="ventoinha">Ventoinha</option>
+</select>
+<br><br>
+<input type="submit">
+  </form>
 
     <h1><?php echo $_GET['nome'] ?></h1>
     <a href="dashboard.php">Voltar Atrás</a>
