@@ -1,3 +1,5 @@
+
+
 .ocupado{
   filter:grayscale();
 }
@@ -8,6 +10,10 @@
 
 .sul{
   transform: rotate(180deg);
+}
+
+.porta{
+  text-align: right;
 }
 
 .erro{
@@ -23,6 +29,7 @@
 }
 body{
     margin-bottom: 50px;
+    
 }
 
 td{
@@ -30,145 +37,15 @@ td{
     border:none;
 }
 
-.table {
-    table-layout: auto;
-    width: 100%;
+.luzBaixa{
+  background-color: rgba(255, 255, 0, 0.20) !important;
+}
+.luzAlta{
+  background-color: rgba(255, 255, 0, 0.40) !important;
 }
 
-/*CHATGPT*/
-
-
+.table {
   
-  /* 2. Style navbar background and links */
-  .navbar {
-    background-color: #22588d;
-  }
-  /* palavra historico fica a branco*/
-  .navbar a {
-    color: #ffffff;
-    
-  }
-  
-  /* 3. Style card headers */
-
-  .card-header {
-    background-color: #007bff;
-    color: #ffffff;
-  }
-  
-  /* 4. Style card bodies */
-  .card-body {
-    background-color: #ffffff;
-  }
-  
-  /* 5. Style card footers */
-  .card-footer {
-    background-color: #f8f9fa;
-  }
-  
-  /* 6. Style card borders */
-  /* tira um bocado das bordas*/
-  .card {
-    border: 1px solid #dee2e6;
-    border-radius: 0.25rem;
-  }
-  
-  /* 7. Style table */
-  .table {
+    table-layout: auto;
     width: 100%;
-  }
-  
-  /* 8. Style table rows */
-  /* separa as filas das cadeiras com linhas*/
-  .table tr {
-    border-bottom: 1px solid #dee2e6;
-  }
-  
-  /* 9. Style table cells */
-  .table td {
-    padding: 8px;
-  }
-  
-  /* 10. Style links in card footers */
-  /* tira o sublinhado em card footers "historico"*/
-  .card-footer a {
-    color: #007bff;
-    text-decoration: none;
-  }
-  
-/* 11. Style active navbar link */
-/* Home fica em bold*/
-.navbar .nav-link.active {
-    font-weight: bold;
-  }
-  
-  /* 12. Style navbar brand */
-  .navbar-brand {
-    color: #ffffff;
-    font-weight: bold;
-  }
-  
-  /* 13. Style navbar toggler icon */
-  .navbar-toggler-icon {
-    background-color: #ffffff;
-  }
-  
-  /* 14. Style card header text */
-  .card-header h4,
-  .card-header h6 {
-    color: #ffffff;
-  }
-  
-  /* 15. Style card body text */
-  /* card body fica mais pequeno*/
-  .card-body h1 {
-    font-size: 2rem;
-  }
-  
-  /* 16. Style card footer text */
-  .card-footer h6 {
-    color: #007bff;
-  }
-  
-  /* 17. Style card images */
-  .card img {
-    max-width: 100%;
-  }
-  
-  /* 18. Style table header */
-  /* header da table*/
-  .table th {
-    background-color: #007bff;
-    color: #ffffff;
-    font-weight: bold;
-  }
-  
-  /* 19. Style table header text alignment */
-  .table th,
-  .table td {
-    text-align: center;
-  }
-  
-  /* 20. Style table cell padding */
-  /* separa as filas das cadeiras com 10 px*/
-  .table td {
-    padding: 10px;
-  }
-
-
-
-
-
-  .top-right-card {
-    position: absolute;
-    top: 55px; /* Adjust top value as needed */
-    right: 50px; /* Adjust right value as needed */
-    width: 250px; /* Adjust width as needed */
-    height: 150px; /* Adjust height as needed */
-    background-color: #f0f0f0;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    text-align: center;
-   
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
