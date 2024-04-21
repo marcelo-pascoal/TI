@@ -11,8 +11,8 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     if (isset($_POST['nome']) && isset($_POST['valor']) && isset($_POST['hora']) && is_dir("files/" . $_POST['nome'])) { // verificar o metodo pela existencia de ficheiros
         if (strpos($_POST['nome'], "lugar") === 0) {
             $coordenadas = explode("-", substr($_POST['nome'], 5));
-            $x = $coordenadas[0];
-            $y = $coordenadas[1];
+            $x = (int)$coordenadas[1];
+            $y = (int)$coordenadas[2];
             $valor = $lugares[$x][$y];
             if (($_POST['valor'] == 0 && $valor < 0) || (($_POST['valor'] == 1) && ($valor > 0))) {
                 $valor = $valor * -1;
