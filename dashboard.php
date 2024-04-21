@@ -135,7 +135,7 @@
               </div>
             </div>
             <hr>
-            <h6><a href="historico.php?nome=humidade">Histórico</a></h6>
+            <h6><a href="historico.php?nome=ventoinha">Histórico</a></h6>
           </div>
         </div>
       </div>
@@ -243,7 +243,7 @@
                 </div>
               </div>
               <div class="card-footer">
-                <h6><a href="historico.php?nome=iluminacao">Histórico</a></h6>
+                <h6><a href="historico.php?nome=portas">Histórico</a></h6>
               </div>
             </div>
           </div>
