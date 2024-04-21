@@ -13,9 +13,12 @@
 
 <body>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-
-
   <?php
+  session_start();
+  if (!isset($_SESSION['username'])) {
+    header("refresh:5;url=index.php");
+    die("Acesso restrito.");
+  }
   /* configuração inicial de lugares
   $lugares = [
     [-1, 1, 0, 2],
@@ -23,36 +26,22 @@
     [-1, 1, 0, 2],
     [1, 1, 0, 9],
     [-1, -1, 1, 1]
-    
   ];
-
   $data = serialize($lugares);
   $filename = './api/files/lugares.txt';
   file_put_contents($filename, $data);
   */
-  session_start();
-  if (!isset($_SESSION['username'])) {
-    header("refresh:5;url=index.php");
-    die("Acesso restrito.");
-  }
 
   $url = 'http://127.0.0.1/projeto';
   //$url = 'http://iot.dei.estg.ipleiria.pt/ti/g168/projeto';
   $apiUrl = $url . '/api/api.php';
-  $params = [
-    'nome' => 'lugares'
-  ];
+  $params = ['nome' => 'lugares'];
   $urlWithParams = $apiUrl . '?' . http_build_query($params);
   $data = file_get_contents($urlWithParams);
   $lugares = json_decode($data, true);
-  $lugares_existentes = 0;
-  $lugares_ocupados = 0;
-  $lugares_livres = 0;
+
+  $lugares_existentes = $lugares_ocupados = $lugares_livres = 0;
   $codigoPorta = 9;
-
-  $controlo_humidade = 50;
-  $controlo_temperatura  = 25;
-
   foreach ($lugares as $linha) {
     foreach ($linha as $posicao) {
       if ($posicao != $codigoPorta) {
@@ -63,12 +52,13 @@
   }
   $lugares_existentes = $lugares_livres + $lugares_ocupados;
 
-  $valor_temperatura = file_get_contents($url . "/api/api.php?nome=temperatura");
-  $valor_humidade = file_get_contents($url . "/api/api.php?nome=humidade");
-  $valor_iluminacao = file_get_contents($url . "/api/api.php?nome=iluminacao");
-  $valor_portas = file_get_contents($url . "/api/api.php?nome=portas");
+  $valores_controlador = explode(";", file_get_contents($url . "/api/api.php?nome=controlador"));
+  $sensor_temperatura = file_get_contents($url . "/api/api.php?nome=temperatura");
+  $sensor_humidade = file_get_contents($url . "/api/api.php?nome=humidade");
+  $atuador_iluminacao = file_get_contents($url . "/api/api.php?nome=iluminacao");
+  $atuador_portas = file_get_contents($url . "/api/api.php?nome=portas");
+  $atuador_ventoinha = file_get_contents($url . "/api/api.php?nome=ventoinha");
   ?>
-
 
   <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
@@ -91,36 +81,66 @@
   <div class="container">
     <div class="row text-center">
       <div class="col-sm-2">
+        <!-- SENSOR DE TEMPERATURA -->
         <div class="card">
           <div class="card-header">
-            <h6><img src=<?php
-                          if ($valor_temperatura >= $controlo_temperatura) echo "imagens/temperature-high.png ";
-                          else echo "imagens/temperature-low.png";
-                          ?> width="20px"> Temperatura</h6>
+            <h6>Temperatura</h6>
           </div>
           <div class="card-body">
-            <h1><?php echo $valor_temperatura ?>ºC</h1>
+            <h1><?php echo $sensor_temperatura ?>ºC</h1>
           </div>
           <div class="card-footer">
             <h6><a href="historico.php?nome=temperatura">Histórico</a></h6>
           </div>
         </div>
-        <div class="card">
+        <!-- SENSOR DE HUMIDADE -->
+        <div class="card ">
           <div class="card-header">
-            <h6><img src=<?php
-                          if ($valor_humidade >= $controlo_humidade) echo "imagens/humidity-high.png ";
-                          else echo "imagens/humidity-low.png";
-                          ?> width="20px">Humidade</h6>
+            <h6>Humidade</h6>
           </div>
           <div class="card-body">
-            <h1><?php echo $valor_humidade ?>%</h1>
+            <h1><?php echo $sensor_humidade ?>%</h1>
           </div>
           <div class="card-footer">
             <h6><a href="historico.php?nome=humidade">Histórico</a></h6>
           </div>
         </div>
+        <hr>
+        <!-- CONTROLADOR DE ATUADOR DE VENTOINHA -->
+        <div class="card">
+          <div class="card-header">
+            <h6>Ventilação</h6>
+          </div>
+          <div class="ventoinha">
+            <img src="imagens/fan.png " width="100px" class=<?php if ($atuador_ventoinha == 0) echo "ocupado"; ?>>
+            <!-- envio de pedido post com as configurações -->
+            <button type="button" class="btn btn-info" onclick="updateControlador();">SET</button>
+          </div>
+          <div class="card-footer">
+            <!-- valores a serem usados pelo controlador -->
+            <div class="d-flex">
+              <div class="col-sm-3">
+                <img src="imagens/temperature-high.png " width="30px">
+              </div>
+              <div class="col-sm-3">
+                <input type="text" style="width: 30px;" id="controlo_temperatura" value=<?php echo $valores_controlador[0]; ?> />
+              </div>
+              <div class="col-sm-3">
+                <img src="imagens/humidity-high.png " width="30px">
+              </div>
+              <div class="col-sm-3">
+                <input type="text" style="width: 30px;" id="controlo_humidade" value=<?php echo $valores_controlador[1]; ?> />
+              </div>
+              <div class="col-sm-1">
+              </div>
+            </div>
+            <hr>
+            <h6><a href="historico.php?nome=humidade">Histórico</a></h6>
+          </div>
+        </div>
       </div>
       <div class="col-sm-6">
+        <!-- Monitorização de Sensores de Lugares  -->
         <div class="card">
           <div class="card-header">
             <h4>Lugares</h4>
@@ -136,23 +156,29 @@
             </div>
           </div>
           <div class="card-body">
+            <!-- tabela de lugares
+                  constroi a tabela de lugares interpretando o array $lugares-->
             <table class="table">
               <tbody>
                 <?php foreach ($lugares as $linha) {
                   echo "<tr>";
                   foreach ($linha as $posicao) {
                     echo '<td class="posicao';
-                    if ($valor_iluminacao == "1") {
+                    //classe CSS para iluminação
+                    if ($atuador_iluminacao == "1") {
                       echo " luzBaixa";
-                    } elseif ($valor_iluminacao == "2") {
+                    } elseif ($atuador_iluminacao == "2") {
                       echo " luzAlta";
                     }
                     if ($posicao != 0) {
+                      //caso seja uma porta
                       if ($posicao == $codigoPorta) {
-                        if ($valor_portas == 0) {
+                        if ($atuador_portas == 0) {
                           echo ' porta"><img src="imagens\porta.png" widtht="80px" height="80px';
                         }
-                      } else {
+                      }
+                      //classe CSS para rotação das imagens dos lugares
+                      else {
                         echo ' lugar"><img class="';
                         switch (abs($posicao)) {
                           case 2:
@@ -162,6 +188,7 @@
                             echo "sul";
                             break;
                         }
+                        //classe CSS para sinalização de lugares ocupados
                         if ($posicao < 0) echo " ocupado ";
                         echo '" src="imagens\lugar.png" widtht="80px" height="80px';
                       }
@@ -177,65 +204,56 @@
         </div>
       </div>
       <div class="col-sm-4">
+        <!-- Espaço para implentação de video -->
         <div class="card-header">
-          <div class="row">
-            <h6>WebCam</h6>
-          </div>
-        </div>
-        <div class="card-body">
+          <hr>
           <img src="imagens/webcam.jpg" width="100%">
           <hr>
-        </div>
-
-        <div style="display: flex; justify-content: space-around;">
-          <div class="card col-sm-5">
-            <div class="card-header">
-              <h4>Iuminação</h4>
-            </div>
-            <div class="card-body">
-              <div class="d-flex flex-column justify-content-around align-content-center" style="height: 35vh;">
-                <button type=" button" class="btn btn-primary" <?php if ($valor_iluminacao == 0) echo "disabled" ?> onclick="toggleIluminacao(0);">OFF</button>
-                <button type="button" class="btn btn-primary" <?php if ($valor_iluminacao == 1) echo "disabled" ?> onclick="toggleIluminacao(1);">Baixa</button>
-                <button type="button" class="btn btn-primary" <?php if ($valor_iluminacao == 2) echo "disabled" ?> onclick="toggleIluminacao(2);">Alta</button>
+          <div style="display: flex; justify-content: space-around;">
+            <!--Atuador de Iluminação
+              apresenta e atualiza os modos de iluminação disponíveis marcando o estado atual como indisponível-->
+            <div class="card col-sm-5">
+              <div class="card-header">
+                <h4>Iuminação</h4>
+              </div>
+              <div class="card-body">
+                <div class="d-flex flex-column justify-content-around align-content-center" style="height: 35vh;">
+                  <button type=" button" class="btn btn-primary" <?php if ($atuador_iluminacao == 0) echo "disabled" ?> onclick="toggleIluminacao(0);">OFF</button>
+                  <button type="button" class="btn btn-primary" <?php if ($atuador_iluminacao == 1) echo "disabled" ?> onclick="toggleIluminacao(1);">Baixa</button>
+                  <button type="button" class="btn btn-primary" <?php if ($atuador_iluminacao == 2) echo "disabled" ?> onclick="toggleIluminacao(2);">Alta</button>
+                </div>
+              </div>
+              <div class="card-footer">
+                <h6><a href="historico.php?nome=iluminacao">Histórico</a></h6>
               </div>
             </div>
-            <div class="card-footer">
-              <h6><a href="historico.php?nome=iluminacao">Histórico</a></h6>
-            </div>
-          </div>
-
-          <div class="card col-sm-5">
-            <div class="card-header">
-              <h4>Portas</h4>
-            </div>
-            <div class="card-body">
-              <div class="justify-content-around align-content-center" style="height: 35vh;">
-                <h4><?php echo ($valor_portas == 0) ? "Fechadas" : "Abertas" ?></h4>
-                <img src=<?php echo ($valor_portas == 0) ? "imagens/abrir_portas.png" : "imagens/fechar_portas.png" ?> width="100px">
-                <?php
-                if ($valor_portas == 0) echo '<button type="button" class="btn btn-success" onclick="togglePortas();";">Abrir</button>';
-                else echo '<button type="button" class="btn btn-danger" onclick="togglePortas();">Fechar</button>'; ?>
+            <!--Atuador de Porta
+              apresenta e alterna o estado das portas-->
+            <div class="card col-sm-5">
+              <div class="card-header">
+                <h4>Portas</h4>
               </div>
-            </div>
-            <div class="card-footer">
-              <h6><a href="historico.php?nome=iluminacao">Histórico</a></h6>
+              <div class="card-body">
+                <div class="justify-content-around align-content-center" style="height: 35vh;">
+                  <h4><?php echo ($atuador_portas == 0) ? "Fechadas" : "Abertas" ?></h4>
+                  <img src=<?php echo ($atuador_portas == 0) ? "imagens/abrir_portas.png" : "imagens/fechar_portas.png" ?> width="100px">
+                  <?php
+                  if ($atuador_portas == 0) echo '<button type="button" class="btn btn-success" onclick="togglePortas();";">Abrir</button>';
+                  else echo '<button type="button" class="btn btn-danger" onclick="togglePortas();">Fechar</button>'; ?>
+                </div>
+              </div>
+              <div class="card-footer">
+                <h6><a href="historico.php?nome=iluminacao">Histórico</a></h6>
+              </div>
             </div>
           </div>
         </div>
-
       </div>
-
     </div>
-
   </div>
-
-
-  </div>
-
-
-  <br>
 
   <script>
+    //função fornecida para criação de timestamp
     function getHora() {
       var dateISO = new Date().toISOString();
       var data0 = dateISO.split('T')[0];
@@ -245,6 +263,7 @@
       return datahora;
     }
 
+    //funçao para alterar o valor da iluminação
     function toggleIluminacao(valor) {
       const data = new URLSearchParams({
         nome: "iluminacao",
@@ -254,18 +273,19 @@
       fetch('./api/api.php', {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/x-www-form-urlencoded' // Correct content type
+            'Content-Type': 'application/x-www-form-urlencoded'
           },
-          body: data.toString() // URL-encoded data as a string
+          body: data.toString()
         })
         .then(window.location.reload())
     }
 
+    //funçao para abertura/fecho de portas, usa o estado atual para alteranar para o estado oposto
     function togglePortas() {
       const data = new URLSearchParams({
         nome: "portas",
         valor: <?php
-                if ($valor_portas == 0) echo "1";
+                if ($atuador_portas == 0) echo "1";
                 else echo "0";
                 ?>,
         hora: getHora()
@@ -273,13 +293,31 @@
       fetch('./api/api.php', {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/x-www-form-urlencoded' // Correct content type
+            'Content-Type': 'application/x-www-form-urlencoded'
           },
-          body: data.toString() // URL-encoded data as a string
+          body: data.toString()
+        })
+        .then(window.location.reload())
+    }
+
+    //funçao para atualização dos parametros para o controlador da ventoinha
+    function updateControlador() {
+      const data = new URLSearchParams({
+        nome: "controlador",
+        temperatura: document.getElementById("controlo_temperatura").value,
+        humidade: document.getElementById("controlo_humidade").value
+      });
+      fetch('./api/api.php', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          body: data.toString()
         })
         .then(window.location.reload())
     }
   </script>
+
 </body>
 
 </html>

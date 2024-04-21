@@ -35,7 +35,6 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
 </head>
 
 <!--Formulario de login-->
-
 <body>
     <div class="container">
         <div class="row justify-content-center">
@@ -49,6 +48,7 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
                     <label for="password" class="form-label">Password</label>
                     <input type="password" class="form-control" id="password" name="password" required>
                 </div>
+                <!--caso o login tenha falhado o utilizador é notificado-->
                 <div class="flex row">
                     <?php if ($loginFalhado)
                         echo '<p class="erro">Credenciais inválidas</p>';
