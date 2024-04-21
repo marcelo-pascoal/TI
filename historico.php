@@ -19,7 +19,7 @@
   ?>
   <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#">Veículo</a>
+      <a class="navbar-brand" href="dashboard.php">Veículo</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -42,12 +42,13 @@
       <option value="iluminacao">Iluminacao</option>
       <option value="portas">Portas</option>
       <option value="ventoinha">Ventoinha</option>
+      <option value="lugar-0-1">lugar-0-1</option>
     </select>
     <br><br>
     <input type="submit">
   </form>
 
-  <h1><?php if (isset($_GET['nome'])) echo $_GET['nome'] ?></h1>
+  <h1><?php if (isset($_GET['nome'])) echo file_get_contents("api/files/" . $_GET['nome'] . "/nome.txt"); ?></h1>
   <a href="dashboard.php">Voltar Atrás</a>
   <div>
     <table class="table">
