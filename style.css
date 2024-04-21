@@ -1,5 +1,4 @@
 
-
 .ocupado{
   filter:grayscale();
 }
@@ -21,20 +20,9 @@
   text-align: center;
 }
 
-.sensor{
-    background-color: #93baff;
-}
-.atuador{
-    background-color: #ffbf6c;
-}
 body{
     margin-bottom: 50px;
     
-}
-
-td{
-    width: 50;
-    border:none;
 }
 
 .luzBaixa{
@@ -44,8 +32,13 @@ td{
   background-color: rgba(255, 255, 0, 0.40) !important;
 }
 
-.table {
-  
-    table-layout: auto;
-    width: 100%;
+.table th, 
+.card-header {
+  background-color: #007bff;
+  color: #ffffff;
+}
+
+.atuadores{
+  display: flex; 
+  justify-content: space-around;
 }

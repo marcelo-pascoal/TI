@@ -205,46 +205,45 @@
       </div>
       <div class="col-sm-4">
         <!-- Espaço para implentação de video -->
-        <div class="card-header">
-          <hr>
-          <img src="imagens/webcam.jpg" width="100%">
-          <hr>
-          <div style="display: flex; justify-content: space-around;">
-            <!--Atuador de Iluminação
+        <hr>
+        <img src="imagens/webcam.jpg" width="100%">
+        <hr>
+
+        <div class="atuadores">
+          <!--Atuador de Iluminação
               apresenta e atualiza os modos de iluminação disponíveis marcando o estado atual como indisponível-->
-            <div class="card col-sm-5">
-              <div class="card-header">
-                <h4>Iuminação</h4>
-              </div>
-              <div class="card-body">
-                <div class="d-flex flex-column justify-content-around align-content-center" style="height: 35vh;">
-                  <button type=" button" class="btn btn-primary" <?php if ($atuador_iluminacao == 0) echo "disabled" ?> onclick="toggleIluminacao(0);">OFF</button>
-                  <button type="button" class="btn btn-primary" <?php if ($atuador_iluminacao == 1) echo "disabled" ?> onclick="toggleIluminacao(1);">Baixa</button>
-                  <button type="button" class="btn btn-primary" <?php if ($atuador_iluminacao == 2) echo "disabled" ?> onclick="toggleIluminacao(2);">Alta</button>
-                </div>
-              </div>
-              <div class="card-footer">
-                <h6><a href="historico.php?nome=iluminacao">Histórico</a></h6>
+          <div class="card col-sm-5">
+            <div class="card-header">
+              <h4>Iuminação</h4>
+            </div>
+            <div class="card-body">
+              <div class="d-flex flex-column justify-content-around align-content-center" style="height: 35vh;">
+                <button type=" button" class="btn btn-primary" <?php if ($atuador_iluminacao == 0) echo "disabled" ?> onclick="toggleIluminacao(0);">OFF</button>
+                <button type="button" class="btn btn-primary" <?php if ($atuador_iluminacao == 1) echo "disabled" ?> onclick="toggleIluminacao(1);">Baixa</button>
+                <button type="button" class="btn btn-primary" <?php if ($atuador_iluminacao == 2) echo "disabled" ?> onclick="toggleIluminacao(2);">Alta</button>
               </div>
             </div>
-            <!--Atuador de Porta
+            <div class="card-footer">
+              <h6><a href="historico.php?nome=iluminacao">Histórico</a></h6>
+            </div>
+          </div>
+          <!--Atuador de Porta
               apresenta e alterna o estado das portas-->
-            <div class="card col-sm-5">
-              <div class="card-header">
-                <h4>Portas</h4>
+          <div class="card col-sm-5">
+            <div class="card-header">
+              <h4>Portas</h4>
+            </div>
+            <div class="card-body">
+              <div class="justify-content-around align-content-center" style="height: 35vh;">
+                <h4><?php echo ($atuador_portas == 0) ? "Fechadas" : "Abertas" ?></h4>
+                <img src=<?php echo ($atuador_portas == 0) ? "imagens/abrir_portas.png" : "imagens/fechar_portas.png" ?> width="100px">
+                <?php
+                if ($atuador_portas == 0) echo '<button type="button" class="btn btn-success" onclick="togglePortas();";">Abrir</button>';
+                else echo '<button type="button" class="btn btn-danger" onclick="togglePortas();">Fechar</button>'; ?>
               </div>
-              <div class="card-body">
-                <div class="justify-content-around align-content-center" style="height: 35vh;">
-                  <h4><?php echo ($atuador_portas == 0) ? "Fechadas" : "Abertas" ?></h4>
-                  <img src=<?php echo ($atuador_portas == 0) ? "imagens/abrir_portas.png" : "imagens/fechar_portas.png" ?> width="100px">
-                  <?php
-                  if ($atuador_portas == 0) echo '<button type="button" class="btn btn-success" onclick="togglePortas();";">Abrir</button>';
-                  else echo '<button type="button" class="btn btn-danger" onclick="togglePortas();">Fechar</button>'; ?>
-                </div>
-              </div>
-              <div class="card-footer">
-                <h6><a href="historico.php?nome=portas">Histórico</a></h6>
-              </div>
+            </div>
+            <div class="card-footer">
+              <h6><a href="historico.php?nome=portas">Histórico</a></h6>
             </div>
           </div>
         </div>
