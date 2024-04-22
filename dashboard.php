@@ -255,7 +255,7 @@
   </div>
 
   <script>
-    const intervalId = setInterval(update_dashboardZZ, 1000);
+    const intervalId = setInterval(update_dashboard, 1000);
 
     //função fornecida para criação de timestamp
     function getHora() {
