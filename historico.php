@@ -18,7 +18,7 @@
   }
 
   $valid_names = [
-    '', 'temperatura', 'humidade', 'iluminacao', 'portas',
+    '', 'temperatura', 'humidade', 'iluminacao', 'portas', 'ventoinha',
     'lugar-0-0', 'lugar-0-1', 'lugar-0-3',
     'lugar-1-0', 'lugar-1-1', 'lugar-1-3',
     'lugar-2-0', 'lugar-2-1', 'lugar-2-3',
