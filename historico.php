@@ -16,6 +16,20 @@
     header("refresh:5;url=index.php");
     die("Acesso restrito.");
   }
+
+  $valid_names = [
+    '', 'temperatura', 'humidade', 'iluminacao', 'portas',
+    'lugar-0-0', 'lugar-0-1', 'lugar-0-3',
+    'lugar-1-0', 'lugar-1-1', 'lugar-1-3',
+    'lugar-2-0', 'lugar-2-1', 'lugar-2-3',
+    'lugar-3-1', 'lugar-3-2', 'lugar-4-0',
+    'lugar-4-1', 'lugar-4-3', 'lugar-4-4'
+  ];
+
+  if (isset($_GET['nome']) && !in_array($_GET['nome'], $valid_names)) {
+    header("refresh:2;url=historico.php");
+    die("Historico Inválido.");
+  }
   ?>
   <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
@@ -35,40 +49,64 @@
       </div>
     </div>
   </nav>
-  <form>
-    <select name="nome">
-      <option value="temperatura">Temperatura</option>
-      <option value="humidade">Humidade</option>
-      <option value="iluminacao">Iluminacao</option>
-      <option value="portas">Portas</option>
-      <option value="ventoinha">Ventoinha</option>
-      <option value="lugar-0-1">lugar-0-1</option>
-    </select>
-    <br><br>
-    <input type="submit">
-  </form>
 
-  <h1><?php if (isset($_GET['nome'])) echo file_get_contents("api/files/" . $_GET['nome'] . "/nome.txt"); ?></h1>
-  <a href="dashboard.php">Voltar Atrás</a>
-  <div>
-    <table class="table">
-      <tr>
-        <th>data</th>
-        <th>valor</th>
-      </tr>
-      <?php
-      if (isset($_GET['nome'])) {
-        $linhasLog = file("api/files/" . $_GET['nome'] . "/log.txt", FILE_IGNORE_NEW_LINES);
-        foreach ($linhasLog as $linha) {
-          echo "<tr><td>";
-          print_r(explode(';', $linha)[0]);
-          echo "</td><td>";
-          print_r(explode(';', $linha)[1]);
-          echo "</td></tr>";
+
+  <div class="card">
+    <div class="card-header">
+      <h1><?php if (isset($_GET['nome']) && $_GET['nome'] != "") echo file_get_contents("api/files/" . $_GET['nome'] . "/nome.txt"); ?></h1>
+    </div>
+    <div class="card-body">
+      <table class="table">
+        <tr>
+          <th>data</th>
+          <th>valor</th>
+        </tr>
+        <?php
+        if (isset($_GET['nome']) && $_GET['nome'] != "") {
+          $linhasLog = file("api/files/" . $_GET['nome'] . "/log.txt", FILE_IGNORE_NEW_LINES);
+          foreach ($linhasLog as $linha) {
+            echo "<tr><td>";
+            print_r(explode(';', $linha)[0]);
+            echo "</td><td>";
+            print_r(explode(';', $linha)[1]);
+            echo "</td></tr>";
+          }
         }
-      }
-      ?>
-    </table>
+        ?>
+      </table>
+    </div>
+  </div>
+
+  <div class="container " style="position: fixed; bottom: 20px;">
+    <form>
+      <div>
+        <h3>Seleccionar: </h3>
+        <select name="nome" selected="">
+          <option value=""></option>
+          <option value="temperatura">Temperatura</option>
+          <option value="humidade">Humidade</option>
+          <option value="iluminacao">Iluminacao</option>
+          <option value="portas">Portas</option>
+          <option value="ventoinha">Ventoinha</option>
+          <option value="lugar-0-0">lugar-0-0</option>
+          <option value="lugar-0-1">lugar-0-1</option>
+          <option value="lugar-0-3">lugar-0-3</option>
+          <option value="lugar-1-0">lugar-1-0</option>
+          <option value="lugar-1-1">lugar-1-1</option>
+          <option value="lugar-1-3">lugar-1-3</option>
+          <option value="lugar-2-0">lugar-2-0</option>
+          <option value="lugar-2-1">lugar-2-1</option>
+          <option value="lugar-2-3">lugar-2-3</option>
+          <option value="lugar-3-0">lugar-3-0</option>
+          <option value="lugar-3-1">lugar-3-1</option>
+          <option value="lugar-4-0">lugar-4-0</option>
+          <option value="lugar-4-1">lugar-4-1</option>
+          <option value="lugar-4-2">lugar-4-2</option>
+          <option value="lugar-4-3">lugar-4-3</option>
+        </select>
+        <input type="submit">
+      </div>
+    </form>
   </div>
 </body>
 
