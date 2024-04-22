@@ -12,6 +12,7 @@
 <body>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <?php
+  /*Verifica se foi inicializada a variavel de sessao username*/
   session_start();
   if (!isset($_SESSION['username'])) {
     header("refresh:5;url=index.php");
@@ -211,7 +212,9 @@
         <hr>
         <div class="atuadores">
           <!--Atuador de Iluminação
-              apresenta e atualiza os modos de iluminação disponíveis marcando o estado atual como indisponível-->
+              apresenta os modos de iluminação disponíveis
+            para cada modo existe um butao com a identificacao distinta para o mesmo ser desativado de acordo com o modo atual(js)
+          a funcao toggleIluminacao() e chamada com parametros distintos quando e acionado o evento onclick em cada butao-->
           <div class="card col-sm-5">
             <div class="card-header">
               <h4>Iuminação</h4>
@@ -228,7 +231,8 @@
             </div>
           </div>
           <!--Atuador de Porta
-              apresenta e alterna o estado das portas-->
+              apresenta e alterna o estado das portas
+            a informacao e atualizada usando os identificadores estado_portas ,imagem_portas e butao_portas-->
           <div class="card col-sm-5">
             <div class="card-header">
               <h4>Portas</h4>
@@ -250,6 +254,7 @@
   </div>
 
   <script>
+    // uso da funcao setInterval() para atualizacao dos componentes da dashboard
     const intervalSensores = setInterval(updateEstados, 1000);
     const intervalControlador = setInterval(updateControlador, 10000);
     updateEstados();
