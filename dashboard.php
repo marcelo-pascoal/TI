@@ -11,7 +11,7 @@
 </head>
 
 <body>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
   <?php
   /*Verifica se foi inicializada a variavel de sessao username*/
   session_start();
@@ -81,7 +81,7 @@
             <h6>Temperatura</h6>
           </div>
           <div class="card-body">
-            <h1 id="temperatura"></h1>
+            <h1 id="temperatura">0</h1>
           </div>
           <div class="card-footer">
             <h6><a href="historico.php?nome=temperatura">Histórico</a></h6>
@@ -93,7 +93,7 @@
             <h6>Humidade</h6>
           </div>
           <div class="card-body">
-            <h1 id="humidade"></h1>
+            <h1 id="humidade">0</h1>
           </div>
           <div class="card-footer">
             <h6><a href="historico.php?nome=humidade">Histórico</a></h6>
@@ -109,7 +109,7 @@
             <!--O constrolo de ligamento/desligamento da ventoinha deverá ser desenvolvido 
                 Este campo apenas permite configurar os parametros para controlo externo
                 Caso o estado do atuador da ventoinha seja alterado, a imagem é sinalizada de acordo com o estado atual-->
-            <img src="imagens/fan.png " width="100px" id="ventoinha">
+            <img alt="" src="imagens/fan.png " width="100" id="ventoinha">
             <!-- envio de pedido post com as configurações -->
             <div class=" flex-column justify-content-around align-content-center">
               <button type="button" class="btn btn-warning" onclick="resetControlador();">RESET</button>
@@ -121,16 +121,16 @@
             <!-- valores a serem usados para atualizar o controlador -->
             <div class="d-flex">
               <div class="col-sm-3">
-                <img src="imagens/temperature-high.png " width="30px">
+                <img alt="" src="imagens/temperature-high.png " width="30">
               </div>
               <div class="col-sm-3">
-                <input type="text" style="width: 30px;" id="controlo_temperatura" />
+                <input type="text" style="width: 30px;" id="controlo_temperatura">
               </div>
               <div class="col-sm-3">
-                <img src="imagens/humidity-high.png " width="30px">
+                <img alt="" src="imagens/humidity-high.png " width="30">
               </div>
               <div class="col-sm-3">
-                <input type="text" style="width: 30px;" id="controlo_humidade" />
+                <input type="text" style="width: 30px;" id="controlo_humidade">
               </div>
               <div class="col-sm-1">
               </div>
@@ -150,15 +150,15 @@
               <!--Contadoes de lugares ocupados/disponíveis-->
               <div class="col-sm-4">
                 <h6>Disponiveis</h6>
-                <h6 id="lugares_livres"></h6>
+                <h6 id="lugares_livres">0</h6>
               </div>
               <div class="col-sm-4">
                 <h6>Ocupados</h6>
-                <h6 id="lugares_ocupados"></h6>
+                <h6 id="lugares_ocupados">0</h6>
               </div>
               <div class="col-sm-4">
                 <h6>Lotação</h6>
-                <h6 id="lugares_total"></h6>
+                <h6 id="lugares_total">0</h6>
               </div>
             </div>
           </div>
@@ -174,28 +174,29 @@
                   echo "<tr>";
                   foreach ($linha as $posicao) {
                     echo '<td class="posicao';
-                    if ($posicao != 0) {
-                      if ($posicao == $codigoPorta) {
-                        //caso seja uma porta
-                        echo ' porta"><img class="porta" src="imagens\porta.png" widtht="80px" height="80px>';
-                      } else {
-                        //é um lugar
-                        //Link diferenciado para os historico do sensor
-                        echo ' lugar"><a href="historico.php?nome=lugar-' . $X . "-" . $Y . '"><img class="';
-                        //classe CSS para rotação da imagem
-                        switch (abs($posicao)) {
-                          case 2:
-                            echo "oeste";
-                            break;
-                          case 3:
-                            echo "sul";
-                            break;
-                        }
-                        //id no formato posicao-X-Y para monitorização independete do estado de cada sensor de lugar
-                        echo '" id="posicao-' . $X . '-' . $Y . '" src="imagens\lugar.png" widtht="80px" height="80px></a>';
+                    if ($posicao == 0) {
+                      //caso seja um espaço vazio
+                      echo ' vazio">';
+                    } else if ($posicao == $codigoPorta) {
+                      //caso seja uma porta
+                      echo ' porta"><img alt="" class="porta" src="' . $url . 'imagens/porta.png" height="80">';
+                    } else {
+                      //é um lugar
+                      //Link diferenciado para os historico do sensor
+                      echo ' lugar"><a href="historico.php?nome=lugar-' . $X . "-" . $Y . '"><img alt="" class="';
+                      //classe CSS para rotação da imagem
+                      switch (abs($posicao)) {
+                        case 2:
+                          echo "oeste";
+                          break;
+                        case 3:
+                          echo "sul";
+                          break;
                       }
+                      //id no formato posicao-X-Y para monitorização independete do estado de cada sensor de lugar
+                      echo '" id="posicao-' . $X . '-' . $Y . '" src="' . $url . '/imagens/lugar.png" height="80"></a>';
                     }
-                    echo '"</td>
+                    echo '</td>
                     ';
                     $Y++;
                   }
@@ -211,9 +212,9 @@
       <div class="col-sm-4">
         <!-- Espaço para implentação de video -->
         <hr>
-        <img src="imagens/webcam.jpg" width="100%">
+        <img alt="" src="imagens/webcam.jpg" style="width: 100%;">
         <hr>
-        <div class="atuadores">
+        <div class=" atuadores">
           <!--Atuador de Iluminação
               apresenta os modos de iluminação disponíveis
             para cada modo existe um butao com a identificacao distinta para o mesmo ser desativado de acordo com o modo atual(js)
@@ -242,8 +243,8 @@
             </div>
             <div class="card-body">
               <div class="justify-content-around align-content-center" style="height: 35vh;">
-                <h4 id="estado_portas"></h4>
-                <img src="imagens/abrir_portas.png" width="100px" id="imagem_portas">
+                <h4 id="estado_portas">Fechadas</h4>
+                <img alt="" src="imagens/abrir_portas.png" width="100" id="imagem_portas">
                 <button type="button" class="btn btn-success" onclick="togglePortas(1);" id="butao_portas">Abrir</button>
               </div>
             </div>
@@ -256,6 +257,7 @@
     </div>
   </div>
 
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script>
     // uso da funcao setInterval() para atualizacao dos componentes da dashboard
     const intervalSensores = setInterval(updateEstados, 2000);
