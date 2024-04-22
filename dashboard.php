@@ -33,7 +33,7 @@
   */
 
   $url = 'http://127.0.0.1/projeto';
-  //$url = 'http://iot.dei.estg.ipleiria.pt/ti/g168/projeto';
+  //$url = 'http://iot.dei.estg.ipleiria.pt/ti/g168';
   $apiUrl = $url . '/api/api.php';
   $params = ['nome' => 'lugares'];
   $urlWithParams = $apiUrl . '?' . http_build_query($params);
@@ -53,8 +53,6 @@
   $lugares_existentes = $lugares_livres + $lugares_ocupados;
 
   $valores_controlador = explode(";", file_get_contents($url . "/api/api.php?nome=controlador"));
-  $sensor_temperatura = file_get_contents($url . "/api/api.php?nome=temperatura");
-  $sensor_humidade = file_get_contents($url . "/api/api.php?nome=humidade");
   $atuador_iluminacao = file_get_contents($url . "/api/api.php?nome=iluminacao");
   $atuador_portas = file_get_contents($url . "/api/api.php?nome=portas");
   $atuador_ventoinha = file_get_contents($url . "/api/api.php?nome=ventoinha");
@@ -87,7 +85,7 @@
             <h6>Temperatura</h6>
           </div>
           <div class="card-body">
-            <h1><?php echo $sensor_temperatura ?>ºC</h1>
+            <h1 id="temperatura"></h1>
           </div>
           <div class="card-footer">
             <h6><a href="historico.php?nome=temperatura">Histórico</a></h6>
@@ -99,7 +97,7 @@
             <h6>Humidade</h6>
           </div>
           <div class="card-body">
-            <h1><?php echo $sensor_humidade ?>%</h1>
+            <h1 id="humidade"></h1>
           </div>
           <div class="card-footer">
             <h6><a href="historico.php?nome=humidade">Histórico</a></h6>
@@ -257,6 +255,8 @@
   </div>
 
   <script>
+    const intervalId = setInterval(update_dashboardZZ, 1000);
+
     //função fornecida para criação de timestamp
     function getHora() {
       var dateISO = new Date().toISOString();
@@ -319,6 +319,17 @@
           body: data.toString()
         })
         .then(window.location.reload())
+    }
+
+    function update_dashboard() {
+      fetch("./api/api.php?nome=temperatura")
+        .then(response => response.text())
+        .then(data => document.getElementById("temperatura").innerHTML = data + "ºC")
+        .catch(error => console.error(error));
+      fetch("./api/api.php?nome=humidade")
+        .then(response => response.text())
+        .then(data => document.getElementById("humidade").innerHTML = data + "%")
+        .catch(error => console.error(error));
     }
   </script>
 
