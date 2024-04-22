@@ -52,13 +52,12 @@
   }
   $lugares_existentes = $lugares_livres + $lugares_ocupados;
 
-  $valores_controlador = explode(";", file_get_contents($url . "/api/api.php?nome=controlador"));
   $atuador_iluminacao = file_get_contents($url . "/api/api.php?nome=iluminacao");
   $atuador_portas = file_get_contents($url . "/api/api.php?nome=portas");
-  $atuador_ventoinha = file_get_contents($url . "/api/api.php?nome=ventoinha");
   ?>
 
   <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <!-- barra de navegação -->
     <div class="container-fluid">
       <a class="navbar-brand" href="dashboard.php">Veículo</a>
       <button class=" navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -77,6 +76,7 @@
     </div>
   </nav>
   <div class="container">
+
     <div class="row text-center">
       <div class="col-sm-2">
         <!-- SENSOR DE TEMPERATURA -->
@@ -110,9 +110,9 @@
             <h6>Ventilação</h6>
           </div>
           <div class="ventoinha">
-            <img src="imagens/fan.png " width="100px" class=<?php if ($atuador_ventoinha == 0) echo "ocupado"; ?>>
+            <img src="imagens/fan.png " width="100px" id="ventoinha">
             <!-- envio de pedido post com as configurações -->
-            <button type="button" class="btn btn-info" onclick="updateControlador();">SET</button>
+            <button type="button" class="btn btn-info" onclick="setControlador();">SET</button>
           </div>
           <div class="card-footer">
             <!-- valores a serem usados pelo controlador -->
@@ -121,13 +121,13 @@
                 <img src="imagens/temperature-high.png " width="30px">
               </div>
               <div class="col-sm-3">
-                <input type="text" style="width: 30px;" id="controlo_temperatura" value=<?php echo $valores_controlador[0]; ?> />
+                <input type="text" style="width: 30px;" id="controlo_temperatura" />
               </div>
               <div class="col-sm-3">
                 <img src="imagens/humidity-high.png " width="30px">
               </div>
               <div class="col-sm-3">
-                <input type="text" style="width: 30px;" id="controlo_humidade" value=<?php echo $valores_controlador[1]; ?> />
+                <input type="text" style="width: 30px;" id="controlo_humidade" />
               </div>
               <div class="col-sm-1">
               </div>
@@ -211,7 +211,6 @@
         <hr>
         <img src="imagens/webcam.jpg" width="100%">
         <hr>
-
         <div class="atuadores">
           <!--Atuador de Iluminação
               apresenta e atualiza os modos de iluminação disponíveis marcando o estado atual como indisponível-->
@@ -221,9 +220,9 @@
             </div>
             <div class="card-body">
               <div class="d-flex flex-column justify-content-around align-content-center" style="height: 35vh;">
-                <button type=" button" class="btn btn-primary" <?php if ($atuador_iluminacao == 0) echo "disabled" ?> onclick="toggleIluminacao(0);">OFF</button>
-                <button type="button" class="btn btn-primary" <?php if ($atuador_iluminacao == 1) echo "disabled" ?> onclick="toggleIluminacao(1);">Baixa</button>
-                <button type="button" class="btn btn-primary" <?php if ($atuador_iluminacao == 2) echo "disabled" ?> onclick="toggleIluminacao(2);">Alta</button>
+                <button type="button" class="btn btn-primary" onclick="toggleIluminacao(0);" id="butao_iluminacao_0">OFF</button>
+                <button type="button" class="btn btn-primary" onclick="toggleIluminacao(1);" id="butao_iluminacao_1">Baixa</button>
+                <button type="button" class="btn btn-primary" onclick="toggleIluminacao(2);" id="butao_iluminacao_2">Alta</button>
               </div>
             </div>
             <div class="card-footer">
@@ -238,11 +237,9 @@
             </div>
             <div class="card-body">
               <div class="justify-content-around align-content-center" style="height: 35vh;">
-                <h4><?php echo ($atuador_portas == 0) ? "Fechadas" : "Abertas" ?></h4>
-                <img src=<?php echo ($atuador_portas == 0) ? "imagens/abrir_portas.png" : "imagens/fechar_portas.png" ?> width="100px">
-                <?php
-                if ($atuador_portas == 0) echo '<button type="button" class="btn btn-success" onclick="togglePortas();";">Abrir</button>';
-                else echo '<button type="button" class="btn btn-danger" onclick="togglePortas();">Fechar</button>'; ?>
+                <h4 id="estado_portas"></h4>
+                <img src="imagens/abrir_portas.png" width="100px" id="imagem_portas">
+                <button type="button" class="btn btn-success" onclick="togglePortas(1);" id="butao_portas">Abrir</button>
               </div>
             </div>
             <div class="card-footer">
@@ -255,7 +252,10 @@
   </div>
 
   <script>
-    const intervalId = setInterval(update_dashboard, 1000);
+    const intervalSensores = setInterval(updateEstados, 1000);
+    const intervalControlador = setInterval(updateControlador, 10000);
+    updateEstados();
+    updateControlador();
 
     //função fornecida para criação de timestamp
     function getHora() {
@@ -275,37 +275,32 @@
         hora: getHora()
       });
       fetch('./api/api.php', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          },
-          body: data.toString()
-        })
-        .then(window.location.reload())
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: data.toString()
+      })
     }
 
     //funçao para abertura/fecho de portas, usa o estado atual para alteranar para o estado oposto
-    function togglePortas() {
+    function togglePortas(valor) {
       const data = new URLSearchParams({
         nome: "portas",
-        valor: <?php
-                if ($atuador_portas == 0) echo "1";
-                else echo "0";
-                ?>,
+        valor: valor,
         hora: getHora()
       });
       fetch('./api/api.php', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          },
-          body: data.toString()
-        })
-        .then(window.location.reload())
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: data.toString()
+      })
     }
 
     //funçao para atualização dos parametros para o controlador da ventoinha
-    function updateControlador() {
+    function setControlador() {
       const data = new URLSearchParams({
         nome: "controlador",
         temperatura: document.getElementById("controlo_temperatura").value,
@@ -321,14 +316,90 @@
         .then(window.location.reload())
     }
 
-    function update_dashboard() {
+    function updateControlador() {
+      fetch("./api/api.php?nome=controlador")
+        .then(response => response.text())
+        .then(data => {
+          var inputTemperatura = document.getElementById("controlo_temperatura");
+          var inputHumidade = document.getElementById("controlo_humidade");
+          valores_controlador = data.split(";");
+          console.log(valores_controlador[0]);
+          inputTemperatura.value = valores_controlador[0];
+          inputHumidade.value = valores_controlador[1];
+
+        })
+        .catch(error => console.error(error));
+    }
+
+    function updateEstados() {
       fetch("./api/api.php?nome=temperatura")
         .then(response => response.text())
         .then(data => document.getElementById("temperatura").innerHTML = data + "ºC")
         .catch(error => console.error(error));
+
       fetch("./api/api.php?nome=humidade")
         .then(response => response.text())
         .then(data => document.getElementById("humidade").innerHTML = data + "%")
+        .catch(error => console.error(error));
+
+      fetch("./api/api.php?nome=ventoinha")
+        .then(response => response.text())
+        .then(data => {
+          var fanImage = document.getElementById('ventoinha');
+          if (data == "0") fanImage.classList.remove('ocupado')
+          else if (data == "1") fanImage.classList.add('ocupado')
+        })
+        .catch(error => console.error(error));
+
+      fetch("./api/api.php?nome=iluminacao")
+        .then(response => response.text())
+        .then(data => {
+          var b0 = document.getElementById('butao_iluminacao_0');
+          var b1 = document.getElementById('butao_iluminacao_1');
+          var b2 = document.getElementById('butao_iluminacao_2');
+          switch (data) {
+            case "0":
+              b0.disabled = true;
+              b1.disabled = false;
+              b2.disabled = false;
+              break;
+            case "1":
+              b0.disabled = false;
+              b1.disabled = true;
+              b2.disabled = false;
+              break;
+            case "2":
+              b0.disabled = false;
+              b1.disabled = false;
+              b2.disabled = true;
+              break;
+          }
+        })
+        .catch(error => console.error(error));
+
+      fetch("./api/api.php?nome=portas")
+        .then(response => response.text())
+        .then(data => {
+          var imagem = document.getElementById("imagem_portas");
+          var butao = document.getElementById('butao_portas');
+          if (data == "0") {
+            imagem.src = "imagens/abrir_portas.png";
+            butao.classList.remove('btn-danger');
+            butao.classList.add('btn-success');
+            butao.innerHTML = "Abrir";
+            butao.onclick = function() {
+              togglePortas(1);
+            }
+          } else if (data == "1") {
+            imagem.src = "imagens/fechar_portas.png";
+            butao.classList.remove('btn-success');
+            butao.classList.add('btn-danger');
+            butao.innerHTML = "Fechar";
+            butao.onclick = function() {
+              togglePortas(0);
+            }
+          }
+        })
         .catch(error => console.error(error));
     }
   </script>
