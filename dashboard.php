@@ -160,9 +160,14 @@
                   constroi a tabela de lugares interpretando o array $lugares-->
             <table class="table">
               <tbody>
-                <?php foreach ($lugares as $linha) {
+                <?php
+                $X = -1;
+                foreach ($lugares as $linha) {
+                  $X++;
+                  $Y = -1;
                   echo "<tr>";
                   foreach ($linha as $posicao) {
+                    $Y++;
                     echo '<td class="posicao';
                     //classe CSS para iluminação
                     if ($atuador_iluminacao == "1") {
@@ -174,12 +179,12 @@
                       //caso seja uma porta
                       if ($posicao == $codigoPorta) {
                         if ($atuador_portas == 0) {
-                          echo ' porta"><img src="imagens\porta.png" widtht="80px" height="80px';
+                          echo ' porta"><img src="imagens\porta.png" widtht="80px" height="80px>';
                         }
                       }
                       //classe CSS para rotação das imagens dos lugares
                       else {
-                        echo ' lugar"><img class="';
+                        echo ' lugar"><a href="historico.php?nome=lugar-' . $X . "-" . $Y . '"><img class="';
                         switch (abs($posicao)) {
                           case 2:
                             echo "oeste";
@@ -190,10 +195,10 @@
                         }
                         //classe CSS para sinalização de lugares ocupados
                         if ($posicao < 0) echo " ocupado ";
-                        echo '" src="imagens\lugar.png" widtht="80px" height="80px';
+                        echo '" src="imagens\lugar.png" widtht="80px" height="80px></a>';
                       }
                     }
-                    echo '"></td>';
+                    echo '"</td>';
                   }
                   echo "</tr>";
                 }
