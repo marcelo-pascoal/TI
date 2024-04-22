@@ -4,11 +4,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!--<meta http-equiv="refresh" content="5">-->
   <title>Plataforma IoT</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
   <link rel="stylesheet" href="style.css">
-
 </head>
 
 <body>
@@ -142,6 +140,7 @@
         <div class="card">
           <div class="card-header">
             <h4>Lugares</h4>
+            <hr>
             <div class="row">
               <div class="col-sm-4">
                 <h6>Disponiveis</h6>
@@ -150,6 +149,10 @@
               <div class="col-sm-4">
                 <h6>Ocupados</h6>
                 <h6><?php echo $lugares_ocupados ?></h6>
+              </div>
+              <div class="col-sm-4">
+                <h6>Lotação</h6>
+                <h6><?php echo $lugares_existentes ?></h6>
               </div>
             </div>
           </div>
@@ -167,12 +170,7 @@
                   foreach ($linha as $posicao) {
                     $Y++;
                     echo '<td class="posicao';
-                    //classe CSS para iluminação
-                    if ($atuador_iluminacao == "1") {
-                      echo " luzBaixa";
-                    } elseif ($atuador_iluminacao == "2") {
-                      echo " luzAlta";
-                    }
+
                     if ($posicao != 0) {
                       //caso seja uma porta
                       if ($posicao == $codigoPorta) {
@@ -346,8 +344,8 @@
         .then(response => response.text())
         .then(data => {
           var fanImage = document.getElementById('ventoinha');
-          if (data == "0") fanImage.classList.remove('ocupado')
-          else if (data == "1") fanImage.classList.add('ocupado')
+          if (data == "1") fanImage.classList.remove('ocupado')
+          else if (data == "0") fanImage.classList.add('ocupado')
         })
         .catch(error => console.error(error));
 
