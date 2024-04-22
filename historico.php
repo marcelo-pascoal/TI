@@ -17,6 +17,7 @@
     die("Acesso restrito.");
   }
 
+  //nomes permitidos para um pedido de histórico
   $valid_names = [
     '', 'temperatura', 'humidade', 'iluminacao', 'portas', 'ventoinha',
     'lugar-0-0', 'lugar-0-1', 'lugar-0-3',
@@ -26,6 +27,7 @@
     'lugar-4-1', 'lugar-4-3', 'lugar-4-4'
   ];
 
+  //valida os parametros do pedido GET para exebição da histórico
   if (isset($_GET['nome']) && !in_array($_GET['nome'], $valid_names)) {
     header("refresh:2;url=historico.php");
     die("Historico Inválido.");
@@ -53,6 +55,7 @@
 
   <div class="card">
     <div class="card-header">
+      <!--Apresenta o conteúdo do ficheiro nome.txt do dispositivo pretendido-->
       <h1><?php if (isset($_GET['nome']) && $_GET['nome'] != "") echo file_get_contents("api/files/" . $_GET['nome'] . "/nome.txt"); ?></h1>
     </div>
     <div class="card-body">

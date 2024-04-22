@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     }
 } elseif ($_SERVER['REQUEST_METHOD'] == "GET") {
     //PEDIDOS GET
-    
+
     if (isset($_GET['nome']) && is_dir("files/" . $_GET['nome'])) {
         //informaçao sobre um sensor/atuador
         http_response_code(200);

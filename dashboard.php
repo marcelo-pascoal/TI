@@ -5,8 +5,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Plataforma IoT</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
   <link rel="stylesheet" href="style.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
 </head>
 
 <body>
@@ -19,6 +20,14 @@
     die("Acesso restrito.");
   }
   /* configuração inicial de lugares
+     é usado um array para comunição do sensor de todos os lugares que
+     casas negativas são lugares ocupados
+     casas positicas são lugares livres
+     o valor numero é usado para representar a orientação da cadeira
+     0 = vazio/passagem
+     9 = porta*/
+
+  /*configuração inicial de lugares
   $lugares = [
     [-1, 1, 0, 2],
     [3, 3, 0, -2],
@@ -37,22 +46,10 @@
   $params = ['nome' => 'lugares'];
   $urlWithParams = $apiUrl . '?' . http_build_query($params);
   $data = file_get_contents($urlWithParams);
+
+  //array de lugares para construção do dashboard
   $lugares = json_decode($data, true);
-
-  $lugares_existentes = $lugares_ocupados = $lugares_livres = 0;
   $codigoPorta = 9;
-  foreach ($lugares as $linha) {
-    foreach ($linha as $posicao) {
-      if ($posicao != $codigoPorta) {
-        if ($posicao > 0) $lugares_livres++;
-        elseif ($posicao < 0) $lugares_ocupados++;
-      }
-    }
-  }
-  $lugares_existentes = $lugares_livres + $lugares_ocupados;
-
-  $atuador_iluminacao = file_get_contents($url . "/api/api.php?nome=iluminacao");
-  $atuador_portas = file_get_contents($url . "/api/api.php?nome=portas");
   ?>
 
   <nav class="navbar navbar-expand-lg bg-body-tertiary">
@@ -108,13 +105,20 @@
           <div class="card-header">
             <h6>Ventilação</h6>
           </div>
-          <div class="ventoinha">
+          <div class="ventoinha d-flex ">
+            <!--O constrolo de ligamento/desligamento da ventoinha deverá ser desenvolvido 
+                Este campo apenas permite configurar os parametros para controlo externo
+                Caso o estado do atuador da ventoinha seja alterado, a imagem é sinalizada de acordo com o estado atual-->
             <img src="imagens/fan.png " width="100px" id="ventoinha">
             <!-- envio de pedido post com as configurações -->
-            <button type="button" class="btn btn-info" onclick="setControlador();">SET</button>
+            <div class=" flex-column justify-content-around align-content-center">
+              <button type="button" class="btn btn-warning" onclick="resetControlador();">RESET</button>
+              <br>
+              <button type="button" class="btn btn-success" onclick="saveControlador();">SAVE</button>
+            </div>
           </div>
           <div class="card-footer">
-            <!-- valores a serem usados pelo controlador -->
+            <!-- valores a serem usados para atualizar o controlador -->
             <div class="d-flex">
               <div class="col-sm-3">
                 <img src="imagens/temperature-high.png " width="30px">
@@ -143,17 +147,18 @@
             <h4>Lugares</h4>
             <hr>
             <div class="row">
+              <!--Contadoes de lugares ocupados/disponíveis-->
               <div class="col-sm-4">
                 <h6>Disponiveis</h6>
-                <h6><?php echo $lugares_livres ?></h6>
+                <h6 id="lugares_livres"></h6>
               </div>
               <div class="col-sm-4">
                 <h6>Ocupados</h6>
-                <h6><?php echo $lugares_ocupados ?></h6>
+                <h6 id="lugares_ocupados"></h6>
               </div>
               <div class="col-sm-4">
                 <h6>Lotação</h6>
-                <h6><?php echo $lugares_existentes ?></h6>
+                <h6 id="lugares_total"></h6>
               </div>
             </div>
           </div>
@@ -163,25 +168,21 @@
             <table class="table">
               <tbody>
                 <?php
-                $X = -1;
+                $X = 0;
                 foreach ($lugares as $linha) {
-                  $X++;
-                  $Y = -1;
+                  $Y = 0;
                   echo "<tr>";
                   foreach ($linha as $posicao) {
-                    $Y++;
                     echo '<td class="posicao';
-
                     if ($posicao != 0) {
-                      //caso seja uma porta
                       if ($posicao == $codigoPorta) {
-                        if ($atuador_portas == 0) {
-                          echo ' porta"><img src="imagens\porta.png" widtht="80px" height="80px>';
-                        }
-                      }
-                      //classe CSS para rotação das imagens dos lugares
-                      else {
+                        //caso seja uma porta
+                        echo ' porta"><img class="porta" src="imagens\porta.png" widtht="80px" height="80px>';
+                      } else {
+                        //é um lugar
+                        //Link diferenciado para os historico do sensor
                         echo ' lugar"><a href="historico.php?nome=lugar-' . $X . "-" . $Y . '"><img class="';
+                        //classe CSS para rotação da imagem
                         switch (abs($posicao)) {
                           case 2:
                             echo "oeste";
@@ -190,14 +191,16 @@
                             echo "sul";
                             break;
                         }
-                        //classe CSS para sinalização de lugares ocupados
-                        if ($posicao < 0) echo " ocupado ";
-                        echo '" src="imagens\lugar.png" widtht="80px" height="80px></a>';
+                        //id no formato posicao-X-Y para monitorização independete do estado de cada sensor de lugar
+                        echo '" id="posicao-' . $X . '-' . $Y . '" src="imagens\lugar.png" widtht="80px" height="80px></a>';
                       }
                     }
-                    echo '"</td>';
+                    echo '"</td>
+                    ';
+                    $Y++;
                   }
                   echo "</tr>";
+                  $X++;
                 }
                 ?>
               </tbody>
@@ -255,10 +258,9 @@
 
   <script>
     // uso da funcao setInterval() para atualizacao dos componentes da dashboard
-    const intervalSensores = setInterval(updateEstados, 1000);
-    const intervalControlador = setInterval(updateControlador, 10000);
+    const intervalSensores = setInterval(updateEstados, 2000);
     updateEstados();
-    updateControlador();
+    resetControlador();
 
     //função fornecida para criação de timestamp
     function getHora() {
@@ -270,7 +272,7 @@
       return datahora;
     }
 
-    //funçao para alterar o valor da iluminação
+    //funçao para alterar o valor da iluminação, recebe como argumento o novo estado do atuador
     function toggleIluminacao(valor) {
       const data = new URLSearchParams({
         nome: "iluminacao",
@@ -286,7 +288,7 @@
       })
     }
 
-    //funçao para abertura/fecho de portas, usa o estado atual para alteranar para o estado oposto
+    //funçao para abertura/fecho de portas, recebe como argumento o novo estado do atuador
     function togglePortas(valor) {
       const data = new URLSearchParams({
         nome: "portas",
@@ -302,31 +304,30 @@
       })
     }
 
-    //funçao para atualização dos parametros para o controlador da ventoinha
-    function setControlador() {
+    //POST - funçao para atualização dos parametros para o controlador da ventoinha
+    function saveControlador() {
       const data = new URLSearchParams({
         nome: "controlador",
         temperatura: document.getElementById("controlo_temperatura").value,
         humidade: document.getElementById("controlo_humidade").value
       });
       fetch('./api/api.php', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          },
-          body: data.toString()
-        })
-        .then(window.location.reload())
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: data.toString()
+      })
     }
 
-    function updateControlador() {
+    //GET - Atualiza os valores do controlador da ventoinha a partir da API
+    function resetControlador() {
       fetch("./api/api.php?nome=controlador")
         .then(response => response.text())
         .then(data => {
           var inputTemperatura = document.getElementById("controlo_temperatura");
           var inputHumidade = document.getElementById("controlo_humidade");
           valores_controlador = data.split(";");
-          console.log(valores_controlador[0]);
           inputTemperatura.value = valores_controlador[0];
           inputHumidade.value = valores_controlador[1];
 
@@ -334,17 +335,21 @@
         .catch(error => console.error(error));
     }
 
+    //Atualiza a dashboard pedindo toda a informação à API
     function updateEstados() {
+      //Sensor Temperatura
       fetch("./api/api.php?nome=temperatura")
         .then(response => response.text())
         .then(data => document.getElementById("temperatura").innerHTML = data + "ºC")
         .catch(error => console.error(error));
 
+      //Sensor Humidade
       fetch("./api/api.php?nome=humidade")
         .then(response => response.text())
         .then(data => document.getElementById("humidade").innerHTML = data + "%")
         .catch(error => console.error(error));
 
+      //Controlador Ventoinha
       fetch("./api/api.php?nome=ventoinha")
         .then(response => response.text())
         .then(data => {
@@ -354,24 +359,30 @@
         })
         .catch(error => console.error(error));
 
+      //Atuador Iluminacao
       fetch("./api/api.php?nome=iluminacao")
         .then(response => response.text())
         .then(data => {
+          const styleSheet = document.styleSheets[0];
+          const ruleIndex = Array.from(styleSheet.cssRules).findIndex(rule => rule.selectorText === ".posicao");
           var b0 = document.getElementById('butao_iluminacao_0');
           var b1 = document.getElementById('butao_iluminacao_1');
           var b2 = document.getElementById('butao_iluminacao_2');
           switch (data) {
             case "0":
+              (styleSheet.cssRules[ruleIndex]).style.setProperty("background-color", "rgba(255, 255, 0, 0)", "important");
               b0.disabled = true;
               b1.disabled = false;
               b2.disabled = false;
               break;
             case "1":
+              (styleSheet.cssRules[ruleIndex]).style.setProperty("background-color", "rgba(255, 255, 0, 0.20)", "important");
               b0.disabled = false;
               b1.disabled = true;
               b2.disabled = false;
               break;
             case "2":
+              (styleSheet.cssRules[ruleIndex]).style.setProperty("background-color", "rgba(255, 255, 0, 0.40)", "important");
               b0.disabled = false;
               b1.disabled = false;
               b2.disabled = true;
@@ -380,9 +391,12 @@
         })
         .catch(error => console.error(error));
 
+      //Atuador Portas
       fetch("./api/api.php?nome=portas")
         .then(response => response.text())
         .then(data => {
+          const styleSheet = document.styleSheets[0];
+          const ruleIndex = Array.from(styleSheet.cssRules).findIndex(rule => rule.selectorText === ".porta");
           var imagem = document.getElementById("imagem_portas");
           var butao = document.getElementById('butao_portas');
           if (data == "0") {
@@ -390,6 +404,7 @@
             butao.classList.remove('btn-danger');
             butao.classList.add('btn-success');
             butao.innerHTML = "Abrir";
+            (styleSheet.cssRules[ruleIndex]).style.setProperty("visibility", "visible");
             butao.onclick = function() {
               togglePortas(1);
             }
@@ -398,10 +413,46 @@
             butao.classList.remove('btn-success');
             butao.classList.add('btn-danger');
             butao.innerHTML = "Fechar";
+            (styleSheet.cssRules[ruleIndex]).style.setProperty("visibility", "hidden");
             butao.onclick = function() {
               togglePortas(0);
             }
           }
+        })
+        .catch(error => console.error(error));
+
+      /*Atualização dos lugares ocupados
+      volta a pedir o array de lugares à API 
+      avalia se os lugares estão ocupados para aribuir/remover a classe correspondente
+      */
+      fetch("./api/api.php?nome=lugares")
+        .then(response => response.text())
+        .then(data => {
+          const lugares = JSON.parse(data);
+          var lugaresOcupados = 0;
+          var lugaresLivres = 0;
+          var elementId = ""
+          var X = Y = 0;
+          lugares.forEach(function(linha) {
+            Y = 0;
+            linha.forEach(function(lugar) {
+              //identificador único
+              elementId = 'posicao-' + X + '-' + Y;
+              if (lugar < 0) {
+                lugaresOcupados++;
+                document.getElementById(elementId).classList.add("ocupado");
+              } else if (lugar != 0 && lugar != 9) {
+                lugaresLivres++;
+                document.getElementById(elementId).classList.remove('ocupado');
+              }
+              Y++
+            })
+            X++
+          });
+          //atualiza a informaçao dos contadores de ligares ocupados/disponiveis
+          document.getElementById("lugares_livres").innerHTML = lugaresLivres;
+          document.getElementById("lugares_ocupados").innerHTML = lugaresOcupados;
+          document.getElementById("lugares_total").innerHTML = lugaresLivres + lugaresOcupados;
         })
         .catch(error => console.error(error));
     }
