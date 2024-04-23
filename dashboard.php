@@ -40,7 +40,7 @@
   file_put_contents($filename, $data);
   */
 
-  $url = 'https://127.0.0.1/projeto';
+  $url = 'http://127.0.0.1/projeto';
   //$url = 'https://iot.dei.estg.ipleiria.pt/ti/g168';
   $apiUrl = $url . '/api/api.php';
   $params = ['nome' => 'lugares'];
