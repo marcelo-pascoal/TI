@@ -179,7 +179,7 @@
                       echo ' vazio">';
                     } else if ($posicao == $codigoPorta) {
                       //caso seja uma porta
-                      echo ' porta"><img alt="" class="porta" src="' . $url . '/imagens/porta.png" height="80">';
+                      echo ' porta"><img alt="" class="estado_porta" src="' . $url . '/imagens/porta.png" height="80">';
                     } else {
                       //é um lugar
                       //Link diferenciado para os historico do sensor
@@ -398,7 +398,7 @@
         .then(response => response.text())
         .then(data => {
           const styleSheet = document.styleSheets[0];
-          const ruleIndex = Array.from(styleSheet.cssRules).findIndex(rule => rule.selectorText === ".porta");
+          const ruleIndex = Array.from(styleSheet.cssRules).findIndex(rule => rule.selectorText === ".estado_porta");
           var imagem = document.getElementById("imagem_portas");
           var butao = document.getElementById('butao_portas');
           if (data == "0") {
