@@ -33,22 +33,31 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         http_response_code(200);
     }
 } elseif ($_SERVER['REQUEST_METHOD'] == "GET") {
-    //PEDIDOS GET
-
-    if (isset($_GET['nome']) && is_dir("files/" . $_GET['nome'])) {
-        //informaçao sobre um sensor/atuador
+    //PEDIDOS DE VALOR
+    if (isset($_GET['valor'])) {
+        if (isset($_GET['valor']) && is_dir("files/" . $_GET['valor'])) {
+            //informaçao sobre um sensor/atuador
+            http_response_code(200);
+            echo file_get_contents("files/" . $_GET['valor'] . "/valor.txt");
+        } elseif ($_GET['valor'] == "lugares") {
+            //envia o array de posições usando o formato de rede json
+            http_response_code(200);
+            echo json_encode($lugares);
+        } elseif ($_GET['valor'] == "controlador") {
+            //retorna valores atuais para o controlador da ventoinha
+            http_response_code(200);
+            echo file_get_contents("files/controlador.txt");
+        }
+    //PEDIDOS DE LOG   
+    } else if (isset($_GET['log']) && is_dir("files/" . $_GET['log'])) {
         http_response_code(200);
-        echo file_get_contents("files/" . $_GET['nome'] . "/valor.txt");
-    } elseif ($_GET['nome'] == "lugares") {
-        //envia o array de posições usando o formato de rede json
+        echo file_get_contents("files/" . $_GET['log'] . "/log.txt");
+    //PEDIDOS DE NOME
+    } else if (isset($_GET['nome']) && is_dir("files/" . $_GET['nome'])) {
         http_response_code(200);
-        echo json_encode($lugares);
-    } elseif ($_GET['nome'] == "controlador") {
-        //retorna valores atuais para o controlador da ventoinha
-        http_response_code(200);
-        echo file_get_contents("files/controlador.txt");
+        echo file_get_contents("files/" . $_GET['nome'] . "/nome.txt");
     } else {
-        echo "faltam parametros no GET";
+        echo "faltam parametros no pedido GET";
     }
 } else {
     http_response_code(403);

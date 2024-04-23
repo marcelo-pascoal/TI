@@ -33,6 +33,7 @@
     die("Historico Inválido.");
   }
   ?>
+  <!-- barra de navegação -->
   <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
       <a class="navbar-brand" href="dashboard.php">Veículo</a>
@@ -64,9 +65,10 @@
           <th>data</th>
           <th>valor</th>
         </tr>
+        <!--Apresenta o conteúdo do ficheiro log.txt do dispositivo pretendido-->
         <?php
         if (isset($_GET['nome']) && $_GET['nome'] != "") {
-          $linhasLog = file("api/files/" . $_GET['nome'] . "/log.txt", FILE_IGNORE_NEW_LINES);
+          $linhasLog = file('http://127.0.0.1/projeto/api/api.php?log=temperatura');
           foreach ($linhasLog as $linha) {
             echo "<tr><td>";
             print_r(explode(';', $linha)[0]);
@@ -80,6 +82,7 @@
     </div>
   </div>
 
+  <!--Seletor para escolha de histórico a apresentar-->
   <div class="container " style="position: fixed; bottom: 20px;">
     <form>
       <div>

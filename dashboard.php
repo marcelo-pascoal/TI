@@ -43,7 +43,7 @@
   $url = 'http://127.0.0.1/projeto';
   //$url = 'https://iot.dei.estg.ipleiria.pt/ti/g168';
   $apiUrl = $url . '/api/api.php';
-  $params = ['nome' => 'lugares'];
+  $params = ['valor' => 'lugares'];
   $urlWithParams = $apiUrl . '?' . http_build_query($params);
   $data = file_get_contents($urlWithParams);
 
@@ -52,8 +52,8 @@
   $codigoPorta = 9;
   ?>
 
+  <!-- barra de navegação -->
   <nav class="navbar navbar-expand-lg bg-body-tertiary">
-    <!-- barra de navegação -->
     <div class="container-fluid">
       <a class="navbar-brand" href="dashboard.php">Veículo</a>
       <button class=" navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -71,8 +71,8 @@
       </div>
     </div>
   </nav>
-  <div class="container">
 
+  <div class="container">
     <div class="row text-center">
       <div class="col-sm-2">
         <!-- SENSOR DE TEMPERATURA -->
@@ -324,7 +324,7 @@
 
     //GET - Atualiza os valores do controlador da ventoinha a partir da API
     function resetControlador() {
-      fetch("./api/api.php?nome=controlador")
+      fetch("./api/api.php?valor=controlador")
         .then(response => response.text())
         .then(data => {
           var inputTemperatura = document.getElementById("controlo_temperatura");
@@ -340,19 +340,19 @@
     //Atualiza a dashboard pedindo toda a informação à API
     function updateEstados() {
       //Sensor Temperatura
-      fetch("./api/api.php?nome=temperatura")
+      fetch("./api/api.php?valor=temperatura")
         .then(response => response.text())
         .then(data => document.getElementById("temperatura").innerHTML = data + "ºC")
         .catch(error => console.error(error));
 
       //Sensor Humidade
-      fetch("./api/api.php?nome=humidade")
+      fetch("./api/api.php?valor=humidade")
         .then(response => response.text())
         .then(data => document.getElementById("humidade").innerHTML = data + "%")
         .catch(error => console.error(error));
 
       //Controlador Ventoinha
-      fetch("./api/api.php?nome=ventoinha")
+      fetch("./api/api.php?valor=ventoinha")
         .then(response => response.text())
         .then(data => {
           var fanImage = document.getElementById('ventoinha');
@@ -362,7 +362,7 @@
         .catch(error => console.error(error));
 
       //Atuador Iluminacao
-      fetch("./api/api.php?nome=iluminacao")
+      fetch("./api/api.php?valor=iluminacao")
         .then(response => response.text())
         .then(data => {
           const styleSheet = document.styleSheets[0];
@@ -394,7 +394,7 @@
         .catch(error => console.error(error));
 
       //Atuador Portas
-      fetch("./api/api.php?nome=portas")
+      fetch("./api/api.php?valor=portas")
         .then(response => response.text())
         .then(data => {
           const styleSheet = document.styleSheets[0];
@@ -427,7 +427,7 @@
       volta a pedir o array de lugares à API 
       avalia se os lugares estão ocupados para aribuir/remover a classe correspondente
       */
-      fetch("./api/api.php?nome=lugares")
+      fetch("./api/api.php?valor=lugares")
         .then(response => response.text())
         .then(data => {
           const lugares = JSON.parse(data);
