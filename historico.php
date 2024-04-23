@@ -25,8 +25,8 @@
     'lugar-0-0', 'lugar-0-1', 'lugar-0-3',
     'lugar-1-0', 'lugar-1-1', 'lugar-1-3',
     'lugar-2-0', 'lugar-2-1', 'lugar-2-3',
-    'lugar-3-1', 'lugar-3-2', 'lugar-4-0',
-    'lugar-4-1', 'lugar-4-3', 'lugar-4-4'
+    'lugar-3-1', 'lugar-3-1', 'lugar-3-2',
+    'lugar-4-0', 'lugar-4-1', 'lugar-4-2', 'lugar-4-3',
   ];
 
   //valida os parametros do pedido GET para exebição da histórico
