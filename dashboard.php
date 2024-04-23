@@ -40,8 +40,8 @@
   file_put_contents($filename, $data);
   */
 
-  $url = 'http://127.0.0.1/projeto';
-  //$url = 'http://iot.dei.estg.ipleiria.pt/ti/g168';
+  //$url = 'https://127.0.0.1/projeto';
+  $url = 'https://iot.dei.estg.ipleiria.pt/ti/g168';
   $apiUrl = $url . '/api/api.php';
   $params = ['nome' => 'lugares'];
   $urlWithParams = $apiUrl . '?' . http_build_query($params);
@@ -112,9 +112,9 @@
             <img alt="" src="imagens/fan.png " width="100" id="ventoinha">
             <!-- envio de pedido post com as configurações -->
             <div class=" flex-column justify-content-around align-content-center">
-              <button type="button" class="btn btn-warning" onclick="resetControlador();">RESET</button>
+              <button type="button" class="btn btn-warning btn-sm" onclick="resetControlador();">RESET</button>
               <br>
-              <button type="button" class="btn btn-success" onclick="saveControlador();">SAVE</button>
+              <button type="button" class="btn btn-success btn-sm" onclick="saveControlador();">SAVE</button>
             </div>
           </div>
           <div class="card-footer">
@@ -179,7 +179,7 @@
                       echo ' vazio">';
                     } else if ($posicao == $codigoPorta) {
                       //caso seja uma porta
-                      echo ' porta"><img alt="" class="porta" src="' . $url . 'imagens/porta.png" height="80">';
+                      echo ' porta"><img alt="" class="porta" src="' . $url . '/imagens/porta.png" height="80">';
                     } else {
                       //é um lugar
                       //Link diferenciado para os historico do sensor

@@ -45,3 +45,6 @@ body{
   display: flex; 
   justify-content: space-around;
 }
+.btn-sm{
+  margin:5px;
+}

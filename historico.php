@@ -84,8 +84,8 @@
     <form>
       <div>
         <h3>Seleccionar: </h3>
-        <select name="nome" selected="">
-          <option value=""></option>
+        <select name="nome">
+          <option value="" label=" "></option>
           <option value="temperatura">Temperatura</option>
           <option value="humidade">Humidade</option>
           <option value="iluminacao">Iluminacao</option>
