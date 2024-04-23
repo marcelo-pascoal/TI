@@ -11,6 +11,8 @@
 
 <body>
   <?php
+  $url = 'http://127.0.0.1/projeto';
+  //$url = 'https://iot.dei.estg.ipleiria.pt/ti/g168';
   session_start();
   if (!isset($_SESSION['username'])) {
     header("refresh:5;url=index.php");
@@ -57,7 +59,7 @@
   <div class="card">
     <div class="card-header">
       <!--Apresenta o conteúdo do ficheiro nome.txt do dispositivo pretendido-->
-      <h1><?php if (isset($_GET['nome']) && $_GET['nome'] != "") echo file_get_contents("api/files/" . $_GET['nome'] . "/nome.txt"); ?></h1>
+      <h1><?php if (isset($_GET['nome']) && $_GET['nome'] != "") echo file_get_contents($url . '/api/api.php?nome=' . $_GET['nome']); ?></h1>
     </div>
     <div class="card-body">
       <table class="table">
@@ -68,7 +70,7 @@
         <!--Apresenta o conteúdo do ficheiro log.txt do dispositivo pretendido-->
         <?php
         if (isset($_GET['nome']) && $_GET['nome'] != "") {
-          $linhasLog = file('http://127.0.0.1/projeto/api/api.php?log=temperatura');
+          $linhasLog = file($url . '/api/api.php?log=' . $_GET['nome']);
           foreach ($linhasLog as $linha) {
             echo "<tr><td>";
             print_r(explode(';', $linha)[0]);
