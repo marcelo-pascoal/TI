@@ -1,5 +1,6 @@
 .posicao{
   background-color: rgba(255, 255, 0, 0) !important;
+  color: #ffffff;
 }
 
 .ocupado{
@@ -20,19 +21,12 @@
 
 .erro{
   color: #ff0000;
+  background-color: #ffffff;
   text-align: center;
 }
 
 body{
     margin-bottom: 50px;
-    
-}
-
-.luzBaixa{
-  background-color: rgba(255, 255, 0, 0.20) !important;
-}
-.luzAlta{
-  background-color: rgba(255, 255, 0, 0.40) !important;
 }
 
 .table th, 
