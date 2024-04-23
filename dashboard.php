@@ -149,7 +149,7 @@ $codigoPorta = 9;
             <h4>Lugares</h4>
             <hr>
             <div class="row">
-              <!--Contadoes de lugares ocupados/disponíveis-->
+              <!-- Contadores de lugares ocupados/disponíveis/lotação-->
               <div class="col-sm-4">
                 <h6>Disponiveis</h6>
                 <h6 id="lugares_livres">0</h6>
@@ -187,7 +187,7 @@ $codigoPorta = 9;
                       //é um lugar
                       //Link diferenciado para o histórico do sensor
                       echo ' lugar"><a href="historico.php?nome=lugar-' . $X . "-" . $Y . '"><img alt="" class="';
-                      //classe CSS para rotação da imagem
+                      //classe CSS para rotação da imagem (norte não necessita de rotação)
                       switch (abs($posicao)) {
                         case 2:
                           echo "oeste";
@@ -263,12 +263,12 @@ $codigoPorta = 9;
   <br>
 
   <script>
-    // uso da funcao setInterval() para atualizacao dos componentes da dashboard
+    // uso da função setInterval() para atualizacao dos componentes da dashboard
     const intervalSensores = setInterval(updateEstados, 2000);
     updateEstados();
     resetControlador();
 
-    //função fornecida para criação de timestamp
+    //função fornecida pelos docentes para criação de timestamp
     function getHora() {
       var dateISO = new Date().toISOString();
       var data0 = dateISO.split('T')[0];
@@ -278,7 +278,7 @@ $codigoPorta = 9;
       return datahora;
     }
 
-    //POST - funçao para alterar o valor da iluminação, recebe como argumento o novo estado do atuador
+    //POST - função para alterar o valor da iluminação, recebe como argumento o novo estado do atuador
     function toggleIluminacao(valor) {
       const data = new URLSearchParams({
         nome: "iluminacao",
@@ -294,7 +294,7 @@ $codigoPorta = 9;
       })
     }
 
-    //POST - funçao para abertura/fecho de portas, recebe como argumento o novo estado do atuador
+    //POST - função para abertura/fecho de portas, recebe como argumento o novo estado do atuador
     function togglePortas(valor) {
       const data = new URLSearchParams({
         nome: "portas",
@@ -341,7 +341,7 @@ $codigoPorta = 9;
         .catch(error => console.error(error));
     }
 
-    //Atualiza a dashboard pedindo toda a informação de sensores e atuadores à API
+    //Atualiza a dashboard fazendo pedidos (GET) da informação de todos o ssensores e atuadores à API
     function updateEstados() {
       //Sensor Temperatura - atualiza o campo de texto com o valor da temperatura
       fetch("./api/api.php?valor=temperatura")
@@ -398,7 +398,7 @@ $codigoPorta = 9;
         })
         .catch(error => console.error(error));
 
-      //Atuador Portas - altera a imgem com o id "imagem_portas" (fechadas / abertas)
+      //Atuador Portas - altera o atribulo "src" da imgem com o id "imagem_portas" (fechadas / abertas)
       //               - altera a classe do butão de controlo de portas (success / danger)
       //               - adiciona ou remove a class 'visible' à imagem da porta na tabela de lugares
       fetch("./api/api.php?valor=portas")
@@ -433,7 +433,7 @@ $codigoPorta = 9;
         .catch(error => console.error(error));
 
       //Atualização dos lugares ocupados
-      //  - volta a pedir o array de lugares à API 
+      //  - volta a pedir o array de lugares à API, para os lugares apenas é tido em conta o sinal de cada posição
 
       fetch("./api/api.php?valor=lugares")
         .then(response => response.text())
@@ -449,11 +449,11 @@ $codigoPorta = 9;
               //identificador único de lugar
               elementId = 'posicao-' + X + '-' + Y;
               if (lugar < 0) {
-                // avalia se os lugares estão ocupados (valor negativo) para aribuir/remover a classe correspondente
+                // avalia se os lugares estão ocupados (valor negativo) para aribuir a classe correspondente
                 lugaresOcupados++;
                 document.getElementById(elementId).classList.add("ocupado");
               } else if (lugar != 0 && lugar != 9) {
-                // avalia se não é um espaço vazio ou uma porta
+                // avalia se não é um espaço vazio ou uma porta para remover a classe correspondente
                 lugaresLivres++;
                 document.getElementById(elementId).classList.remove('ocupado');
               }
@@ -461,7 +461,7 @@ $codigoPorta = 9;
             })
             X++
           });
-          //atualiza a informaçao dos contadores de ligares ocupados/disponiveis
+          //atualiza a informaçao dos contadores de lugares ocupados/disponiveis/lotação
           document.getElementById("lugares_livres").innerHTML = lugaresLivres;
           document.getElementById("lugares_ocupados").innerHTML = lugaresOcupados;
           document.getElementById("lugares_total").innerHTML = lugaresLivres + lugaresOcupados;
