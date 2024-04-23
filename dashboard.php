@@ -5,9 +5,9 @@ if (!isset($_SESSION['username'])) {
   header("refresh:5;url=index.php");
   die("Acesso restrito.");
 }
-/* é usado um array para comunição do sensor de todos os lugares:
+/* é usado um array para comunicação do sensor de todos os lugares:
   casas negativas são lugares ocupados; casas positivas são lugares livres
-  o valor absoluto numero é usado para representar a orientação da cadeira (1 norte; 2 oeste; 3 sul)
+  o valor absoluto do número é usado para representar a orientação da cadeira (1 norte; 2 oeste; 3 sul)
   0 = vazio/passagem 9 = porta
   
   configuração inicial de lugares: 
@@ -50,7 +50,6 @@ $codigoPorta = 9;
   <title>Plataforma IoT</title>
   <link rel="stylesheet" href="style.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-
 </head>
 
 <body>
@@ -109,9 +108,9 @@ $codigoPorta = 9;
             <h6>Ventilação</h6>
           </div>
           <div class="ventoinha d-flex ">
-            <!--O constrolo de ligamento/desligamento da ventoinha deverá ser desenvolvido 
-                Este campo apenas permite configurar os parametros para controlo externo
-                Caso o estado do atuador da ventoinha seja alterado, a imagem é sinalizada de acordo com o estado atual-->
+            <!--O controlo de ligamento/desligamento da ventoinha deverá ser desenvolvido usando um controlador externo
+                Este campo apenas permite configurar os parametros para controlo
+                Caso o estado do atuador da ventoinha seja alterado, a imagem é atualizada de correspondedn ao estado atual-->
             <img alt="" src="imagens/fan.png " width="100" id="ventoinha">
             <!-- envio de pedido post com as configurações -->
             <div class=" flex-column justify-content-around align-content-center">
@@ -167,10 +166,11 @@ $codigoPorta = 9;
           </div>
           <div class="card-body">
             <!-- tabela de lugares
-                  constroi a tabela de lugares interpretando o array $lugares-->
+                  construção da tabela de lugares interpretando o array $lugares-->
             <table class="table">
               <tbody>
                 <?php
+                //variaveis X Y que representam as posições no array $lugares
                 $X = 0;
                 foreach ($lugares as $linha) {
                   $Y = 0;
@@ -185,7 +185,7 @@ $codigoPorta = 9;
                       echo ' porta"><img alt="" class="estado_porta" src="' . $url . '/imagens/porta.png" height="80">';
                     } else {
                       //é um lugar
-                      //Link diferenciado para os historico do sensor
+                      //Link diferenciado para o histórico do sensor
                       echo ' lugar"><a href="historico.php?nome=lugar-' . $X . "-" . $Y . '"><img alt="" class="';
                       //classe CSS para rotação da imagem
                       switch (abs($posicao)) {
@@ -196,7 +196,7 @@ $codigoPorta = 9;
                           echo "sul";
                           break;
                       }
-                      //id no formato posicao-X-Y para monitorização independete do estado de cada sensor de lugar
+                      //id no formato "posicao-X-Y" para monitorização independete do estado de cada sensor de lugar
                       echo '" id="posicao-' . $X . '-' . $Y . '" src="' . $url . '/imagens/lugar.png" height="80"></a>';
                     }
                     echo '</td>
@@ -221,7 +221,7 @@ $codigoPorta = 9;
         <div class=" atuadores">
           <!--Atuador de Iluminação
               apresenta os modos de iluminação disponíveis
-            para cada modo existe um butao com a identificacao distinta para o mesmo ser desativado de acordo com o modo atual(js)
+            para cada modo existe um butão com a identificação distinta para o mesmo ser desativado de acordo com o modo atual (js)
           a funcao toggleIluminacao() e chamada com parametros distintos quando e acionado o evento onclick em cada butao-->
           <div class="card col-sm-5">
             <div class="card-header">
@@ -239,7 +239,7 @@ $codigoPorta = 9;
             </div>
           </div>
           <!--Atuador de Porta
-              apresenta e alterna o estado das portas
+              apresenta e alterna o estado das portas usando a função togglePortas(), o arguemento a enviar e definido ao atualizar os daos
             a informacao e atualizada usando os identificadores estado_portas ,imagem_portas e butao_portas-->
           <div class="card col-sm-5">
             <div class="card-header">
@@ -341,21 +341,21 @@ $codigoPorta = 9;
         .catch(error => console.error(error));
     }
 
-    //Atualiza a dashboard pedindo toda a informação à API
+    //Atualiza a dashboard pedindo toda a informação de sensores e atuadores à API
     function updateEstados() {
-      //Sensor Temperatura
+      //Sensor Temperatura - atualiza o campo de texto com o valor da temperatura
       fetch("./api/api.php?valor=temperatura")
         .then(response => response.text())
         .then(data => document.getElementById("temperatura").innerHTML = data + "ºC")
         .catch(error => console.error(error));
 
-      //Sensor Humidade
+      //Sensor Humidade - atualiza o campo de texto com o valor da humidade
       fetch("./api/api.php?valor=humidade")
         .then(response => response.text())
         .then(data => document.getElementById("humidade").innerHTML = data + "%")
         .catch(error => console.error(error));
 
-      //Controlador Ventoinha
+      //Controlador Ventoinha - adiciona ou remove a class 'ocupado' à imagem da ventoinha
       fetch("./api/api.php?valor=ventoinha")
         .then(response => response.text())
         .then(data => {
@@ -365,7 +365,8 @@ $codigoPorta = 9;
         })
         .catch(error => console.error(error));
 
-      //Atuador Iluminacao
+      //Atuador Iluminacao - altera a cor de fundo (já associado às celulas da tabela de lugares) de acordo com o nivel de luminusidade
+      //                   - coloca o butão correspondente como desativo, e os restantes como ativos
       fetch("./api/api.php?valor=iluminacao")
         .then(response => response.text())
         .then(data => {
@@ -397,7 +398,9 @@ $codigoPorta = 9;
         })
         .catch(error => console.error(error));
 
-      //Atuador Portas
+      //Atuador Portas - altera a imgem com o id "imagem_portas" (fechadas / abertas)
+      //               - altera a classe do butão de controlo de portas (success / danger)
+      //               - adiciona ou remove a class 'visible' à imagem da porta na tabela de lugares
       fetch("./api/api.php?valor=portas")
         .then(response => response.text())
         .then(data => {
@@ -429,10 +432,9 @@ $codigoPorta = 9;
         })
         .catch(error => console.error(error));
 
-      /*Atualização dos lugares ocupados
-      volta a pedir o array de lugares à API 
-      avalia se os lugares estão ocupados para aribuir/remover a classe correspondente
-      */
+      //Atualização dos lugares ocupados
+      //  - volta a pedir o array de lugares à API 
+
       fetch("./api/api.php?valor=lugares")
         .then(response => response.text())
         .then(data => {
@@ -444,12 +446,14 @@ $codigoPorta = 9;
           lugares.forEach(function(linha) {
             Y = 0;
             linha.forEach(function(lugar) {
-              //identificador único
+              //identificador único de lugar
               elementId = 'posicao-' + X + '-' + Y;
               if (lugar < 0) {
+                // avalia se os lugares estão ocupados (valor negativo) para aribuir/remover a classe correspondente
                 lugaresOcupados++;
                 document.getElementById(elementId).classList.add("ocupado");
               } else if (lugar != 0 && lugar != 9) {
+                // avalia se não é um espaço vazio ou uma porta
                 lugaresLivres++;
                 document.getElementById(elementId).classList.remove('ocupado');
               }
