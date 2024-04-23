@@ -39,6 +39,7 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
             width: 300px;
             height: 200px;
             position: absolute;
+            top: 50px;
             left: 50%;
             margin-left: -150px;
         }

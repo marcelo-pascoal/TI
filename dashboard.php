@@ -42,12 +42,10 @@
 
   $url = 'http://127.0.0.1/projeto';
   //$url = 'https://iot.dei.estg.ipleiria.pt/ti/g168';
-  $apiUrl = $url . '/api/api.php';
-  $params = ['valor' => 'lugares'];
-  $urlWithParams = $apiUrl . '?' . http_build_query($params);
-  $data = file_get_contents($urlWithParams);
 
-  //array de lugares para construção do dashboard
+  //pedido à API pelo array de lugares para construção do dashboard
+  //esta informação (array de lugares é trocada usando o formato JSON
+  $data = file_get_contents($url . '/api/api.php?valor=lugares');
   $lugares = json_decode($data, true);
   $codigoPorta = 9;
   ?>
@@ -71,10 +69,10 @@
       </div>
     </div>
   </nav>
-
+  <br>
   <div class="container">
     <div class="row text-center">
-      <div class="col-sm-2">
+      <div class="col-sm-2 flex-column justify-content-around align-content-center">
         <!-- SENSOR DE TEMPERATURA -->
         <div class="card">
           <div class="card-header">
@@ -87,6 +85,7 @@
             <h6><a href="historico.php?nome=temperatura">Histórico</a></h6>
           </div>
         </div>
+        <br>
         <!-- SENSOR DE HUMIDADE -->
         <div class="card ">
           <div class="card-header">
@@ -140,7 +139,7 @@
           </div>
         </div>
       </div>
-      <div class="col-sm-6">
+      <div class="col-sm-6  flex-column justify-content-around align-content-center">
         <!-- Monitorização de Sensores de Lugares  -->
         <div class="card">
           <div class="card-header">
@@ -209,7 +208,8 @@
           </div>
         </div>
       </div>
-      <div class="col-sm-4">
+      <div class="col-sm-4  flex-column justify-content-around align-content-center">
+        <p class="card-text">Bem vindo user: <b><?php echo $_SESSION['username'] ?></b></p>
         <!-- Espaço para implentação de video -->
         <hr>
         <img alt="" src="imagens/webcam.jpg" style="width: 100%;">
@@ -256,6 +256,7 @@
       </div>
     </div>
   </div>
+  <br>
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script>
@@ -274,7 +275,7 @@
       return datahora;
     }
 
-    //funçao para alterar o valor da iluminação, recebe como argumento o novo estado do atuador
+    //POST - funçao para alterar o valor da iluminação, recebe como argumento o novo estado do atuador
     function toggleIluminacao(valor) {
       const data = new URLSearchParams({
         nome: "iluminacao",
@@ -290,7 +291,7 @@
       })
     }
 
-    //funçao para abertura/fecho de portas, recebe como argumento o novo estado do atuador
+    //POST - funçao para abertura/fecho de portas, recebe como argumento o novo estado do atuador
     function togglePortas(valor) {
       const data = new URLSearchParams({
         nome: "portas",
