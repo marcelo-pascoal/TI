@@ -1,3 +1,46 @@
+<?php
+/*Verifica se foi inicializada a variavel de sessao username*/
+session_start();
+if (!isset($_SESSION['username'])) {
+  header("refresh:5;url=index.php");
+  die("Acesso restrito.");
+}
+/* é usado um array para comunição do sensor de todos os lugares:
+  casas negativas são lugares ocupados; casas positivas são lugares livres
+  o valor absoluto numero é usado para representar a orientação da cadeira (1 norte; 2 oeste; 3 sul)
+  0 = vazio/passagem 9 = porta
+  
+  configuração inicial de lugares: 
+  $lugares = [
+    [-1, 1, 0, 2],
+    [3, 3, 0, -2],
+    [-1, 1, 0, 2],
+    [1, 1, 0, 9],
+    [-1, -1, 1, 1]
+  ];
+  $data = serialize($lugares);
+  $filename = './api/files/lugares.txt';
+  file_put_contents($filename, $data);
+
+  Sensores:
+  Sensor de Temperatura
+  Sensor de humidade
+  Sensor de lugar (tantos sensores quantos lugares disponíveis)
+
+  Atuadores:
+  Atuador de nível de luminusidade  (off: 1;baixa: 2;alta: 3)
+  Atuador de portas                 (Fechada: 0 ; Aberta: 1)
+  Aturador de Ventoinha             (Desligada:0 ; Ligada: 1)  Este atuador só é ligado/desligado por um controlador externo
+*/
+
+//pedido à API pelo array de lugares para construção do dashboard, esta informação (array de lugares) é trocada usando o formato JSON
+$url = 'http://127.0.0.1/projeto';
+//$url = 'https://iot.dei.estg.ipleiria.pt/ti/g168';
+$data = file_get_contents($url . '/api/api.php?valor=lugares');
+$lugares = json_decode($data, true);
+$codigoPorta = 9;
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -11,45 +54,6 @@
 </head>
 
 <body>
-
-  <?php
-  /*Verifica se foi inicializada a variavel de sessao username*/
-  session_start();
-  if (!isset($_SESSION['username'])) {
-    header("refresh:5;url=index.php");
-    die("Acesso restrito.");
-  }
-  /* configuração inicial de lugares
-     é usado um array para comunição do sensor de todos os lugares que
-     casas negativas são lugares ocupados
-     casas positicas são lugares livres
-     o valor numero é usado para representar a orientação da cadeira
-     0 = vazio/passagem
-     9 = porta*/
-
-  /*configuração inicial de lugares
-  $lugares = [
-    [-1, 1, 0, 2],
-    [3, 3, 0, -2],
-    [-1, 1, 0, 2],
-    [1, 1, 0, 9],
-    [-1, -1, 1, 1]
-  ];
-  $data = serialize($lugares);
-  $filename = './api/files/lugares.txt';
-  file_put_contents($filename, $data);
-  */
-
-  $url = 'http://127.0.0.1/projeto';
-  //$url = 'https://iot.dei.estg.ipleiria.pt/ti/g168';
-
-  //pedido à API pelo array de lugares para construção do dashboard
-  //esta informação (array de lugares é trocada usando o formato JSON
-  $data = file_get_contents($url . '/api/api.php?valor=lugares');
-  $lugares = json_decode($data, true);
-  $codigoPorta = 9;
-  ?>
-
   <!-- barra de navegação -->
   <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
@@ -258,7 +262,6 @@
   </div>
   <br>
 
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script>
     // uso da funcao setInterval() para atualizacao dos componentes da dashboard
     const intervalSensores = setInterval(updateEstados, 2000);
@@ -408,6 +411,7 @@
             butao.classList.add('btn-success');
             butao.innerHTML = "Abrir";
             (styleSheet.cssRules[ruleIndex]).style.setProperty("visibility", "visible");
+            document.getElementById("estado_portas").innerHTML = "Fechadas";
             butao.onclick = function() {
               togglePortas(1);
             }
@@ -417,6 +421,7 @@
             butao.classList.add('btn-danger');
             butao.innerHTML = "Fechar";
             (styleSheet.cssRules[ruleIndex]).style.setProperty("visibility", "hidden");
+            document.getElementById("estado_portas").innerHTML = "Abertas";
             butao.onclick = function() {
               togglePortas(0);
             }
