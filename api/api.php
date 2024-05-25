@@ -2,7 +2,6 @@
 header('Content-Type: text/html; charset=utf-8');
 
 //carrega para memoria o array representante das posições do veículo
-$lugares = unserialize(file_get_contents('files/lugares.txt'));
 
 http_response_code(400);
 
@@ -15,12 +14,23 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             $coordenadas = explode("-", substr($_POST['nome'], 5));
             $x = (int)$coordenadas[1];
             $y = (int)$coordenadas[2];
-            $valor = $lugares[$x][$y];
-            if (($_POST['valor'] == 0 && $valor < 0) || (($_POST['valor'] == 1) && ($valor > 0))) {
-                $valor = $valor * -1;
-                $lugares[$x][$y] = $valor;
-                file_put_contents('./files/lugares.txt', serialize($lugares));
+            $file = fopen('files/lugares.txt', 'c+');
+            if (flock($file, LOCK_EX)) { // Acquire an exclusive lock
+                $lugares = unserialize(fread($file, filesize('files/lugares.txt')));
+                $valor = $lugares[$x][$y];
+                if (($_POST['valor'] == 0 && $valor < 0) || (($_POST['valor'] == 1) && ($valor > 0))) {
+                    $valor = $valor * -1;
+                    $lugares[$x][$y] = $valor;
+                    rewind($file);
+                    ftruncate($file, 0);
+                    fwrite($file, serialize($lugares));
+                    fflush($file);
+                }
+                flock($file, LOCK_UN); // Release the lock
+            } else {
+                throw new Exception("Could not lock the file for writing.");
             }
+            fclose($file);
         }
         //atualização dos ficheiros do sensor
         file_put_contents("files/" . $_POST['nome'] . "/valor.txt", $_POST['valor']);
@@ -41,6 +51,14 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             echo file_get_contents("files/" . $_GET['valor'] . "/valor.txt");
         } elseif ($_GET['valor'] == "lugares") {
             //envia o array de posições usando o formato de rede json
+            $file = fopen('files/lugares.txt', 'r');
+            if (flock($file, LOCK_SH)) { // Acquire a shared lock
+                $lugares = unserialize(fread($file, filesize('files/lugares.txt')));
+                flock($file, LOCK_UN); // Release the lock
+            } else {
+                throw new Exception("Could not lock the file for reading.");
+            }
+            fclose($file);
             http_response_code(200);
             echo json_encode($lugares);
         } elseif ($_GET['valor'] == "controlador") {
