@@ -1,17 +1,14 @@
 <?php
-#Login
-#Verifica se as variáveis 'username' e 'password' estão definidas através de pedido POST.
-#       Caso não seja possível abrir o ficheiro de utilizadores é retornado erro de servidor (500)
-#       precorre o ficheiro linha a linha e explode cada uma para validação
-#           Caso o username seja igual ao username fornecido e a password seja validada com o hash guardado
-#               o utilizador é redireccionado para o dashboard
-#               o username é defenido como variável de sessão para posterior verificação. 
 session_start();
 if (isset($_SESSION["username"])) {
+    if(trim($_SESSION['role']) !== 'Admin'){
+        header("Location: admin.php");
+    }
     header("Location: dashboard.php");
     exit;
 }
 ?>
+
 <!doctype html>
 <html lang="en">
 

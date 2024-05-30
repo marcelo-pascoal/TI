@@ -1,3 +1,37 @@
+<?php
+session_start();
+if (!isset($_SESSION['username'])) {
+  header("refresh:5;url=index.php");
+  die("Acesso restrito.");
+}
+if (!isset($_GET['veiculo']) || !is_dir("api/files/" . $_GET['veiculo'])) {
+  header("refresh:2;url=index.php");
+  die("Acesso iválido.");
+}
+
+$url = 'http://127.0.0.1/projeto';
+//$url = 'https://iot.dei.estg.ipleiria.pt/ti/g168';
+
+
+//nomes permitidos para um pedido de histórico
+$valid_names = [];
+$directory = './api/files/' . $_GET['veiculo'];
+$contents = scandir($directory);
+foreach ($contents as $item) {
+  if ($item != '.' && $item != '..') {
+    // Verifica se é uma diretoria
+    if (is_dir($directory . '/' . $item)) {
+      $valid_names[] = $item;
+    }
+  }
+}
+//valida os parametros do pedido GET para exebição da histórico
+if (isset($_GET['nome']) && !in_array($_GET['nome'], $valid_names)) {
+  header("refresh:2;url=historico.php");
+  die("Historico Inválido.");
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -10,44 +44,32 @@
 </head>
 
 <body>
-  <?php
-  $url = 'http://127.0.0.1/projeto';
-  //$url = 'https://iot.dei.estg.ipleiria.pt/ti/g168';
-  session_start();
-  if (!isset($_SESSION['username'])) {
-    header("refresh:5;url=index.php");
-    die("Acesso restrito.");
-  }
-
-  //nomes permitidos para um pedido de histórico
-  $valid_names = [
-    '', 'temperatura', 'humidade', 'iluminacao', 'portas', 'ventoinha',
-    'lugar-0-0', 'lugar-0-1', 'lugar-0-3',
-    'lugar-1-0', 'lugar-1-1', 'lugar-1-3',
-    'lugar-2-0', 'lugar-2-1', 'lugar-2-3',
-    'lugar-3-1', 'lugar-3-1', 'lugar-3-2',
-    'lugar-4-0', 'lugar-4-1', 'lugar-4-2', 'lugar-4-3',
-  ];
-
-  //valida os parametros do pedido GET para exebição da histórico
-  if (isset($_GET['nome']) && !in_array($_GET['nome'], $valid_names)) {
-    header("refresh:2;url=historico.php");
-    die("Historico Inválido.");
-  }
-  ?>
   <!-- barra de navegação -->
   <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
-      <a class="navbar-brand" href="dashboard.php">Veículo</a>
+      <a class="navbar-brand" href="#">SmartDrive</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <?php
+          if (trim($_SESSION['role']) === 'Admin') {
+            echo '<li class="nav-item">';
+            echo '  <a class="nav-link" href="admin.php"><b>Administração</b> </a>';
+            echo '</li>';
+          }
+          ?>
           <li class="nav-item">
-            <a class="nav-link" href="historico.php">Histórico</a>
+            <a class="nav-link" href="dashboard.php"><?php echo $_GET['veiculo'] ?></a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="historico.php?veiculo=<?php echo $_GET['veiculo'] ?>">Histórico</a>
           </li>
         </ul>
+        <span class="navbar-text">
+          user: <b><?php echo $_SESSION['username'] ?></b> &nbsp;
+        </span>
         <form class="d-flex" action="logout.php" method="post">
           <button class="btn btn-outline-success" type="submit">Logout</button>
         </form>
@@ -59,7 +81,7 @@
   <div class="card">
     <div class="card-header">
       <!--Apresenta o conteúdo do ficheiro nome.txt do dispositivo pretendido-->
-      <h1><?php if (isset($_GET['nome']) && $_GET['nome'] != "") echo file_get_contents($url . '/api/api.php?nome=' . $_GET['nome']); ?></h1>
+      <h1><?php if (isset($_GET['nome']) && $_GET['nome'] != "") echo file_get_contents($url . '/api/api.php?veiculo=' . $_GET['veiculo'] . '&nome=' . $_GET['nome']); ?></h1>
     </div>
     <div class="card-body">
       <table class="table">
@@ -70,7 +92,7 @@
         <!--Apresenta o conteúdo do ficheiro log.txt do dispositivo pretendido-->
         <?php
         if (isset($_GET['nome']) && $_GET['nome'] != "") {
-          $linhasLog = file($url . '/api/api.php?log=' . $_GET['nome']);
+          $linhasLog = file($url . '/api/api.php?veiculo=' . $_GET['veiculo'] . '&log=' . $_GET['nome']);
           foreach ($linhasLog as $linha) {
             echo "<tr><td>";
             print_r(explode(';', $linha)[0]);
@@ -87,30 +109,16 @@
   <!--Seletor para escolha de histórico a apresentar-->
   <div class="container " style="position: fixed; bottom: 20px;">
     <form>
+      <input type="hidden" name="veiculo" value="<?php echo $_GET['veiculo']; ?>">
       <div>
         <h3>Seleccionar: </h3>
         <select name="nome">
           <option value="" label=" "></option>
-          <option value="temperatura">Temperatura</option>
-          <option value="humidade">Humidade</option>
-          <option value="iluminacao">Iluminacao</option>
-          <option value="portas">Portas</option>
-          <option value="ventoinha">Ventoinha</option>
-          <option value="lugar-0-0">lugar-0-0</option>
-          <option value="lugar-0-1">lugar-0-1</option>
-          <option value="lugar-0-3">lugar-0-3</option>
-          <option value="lugar-1-0">lugar-1-0</option>
-          <option value="lugar-1-1">lugar-1-1</option>
-          <option value="lugar-1-3">lugar-1-3</option>
-          <option value="lugar-2-0">lugar-2-0</option>
-          <option value="lugar-2-1">lugar-2-1</option>
-          <option value="lugar-2-3">lugar-2-3</option>
-          <option value="lugar-3-0">lugar-3-0</option>
-          <option value="lugar-3-1">lugar-3-1</option>
-          <option value="lugar-4-0">lugar-4-0</option>
-          <option value="lugar-4-1">lugar-4-1</option>
-          <option value="lugar-4-2">lugar-4-2</option>
-          <option value="lugar-4-3">lugar-4-3</option>
+          <?php
+          foreach ($valid_names as $name) {
+            echo '<option value="' . $name . '">' . $name . '</option>';
+          }
+          ?>
         </select>
         <input type="submit">
       </div>

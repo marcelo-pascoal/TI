@@ -13,7 +13,10 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
                 $_SESSION["role"] = $linha[2];
                 fclose($users);
                 http_response_code(200);
-                header("Location: ../dashboard.php");
+                if (strcmp(trim($linha[2]), "Admin") == 0) {
+                    header("Location: ../admin.php");
+                } else
+                    header("Location: ../dashboard.php");
                 exit;
             }
         }

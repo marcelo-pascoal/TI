@@ -5,42 +5,19 @@ if (!isset($_SESSION['username'])) {
   header("refresh:5;url=index.php");
   die("Acesso restrito.");
 }
+/*Verifica se existe a variavel veiculo*/
 if (!isset($_GET['veiculo'])) {
-  header("refresh:.4;dashboard.php?veiculo=" . $_SESSION['role']);
-  die("A redirecionar.");
+  if (trim($_SESSION['role']) === 'Admin') {
+    header("Location: admin.php");
+  }
+  header("Location: dashboard.php?veiculo=" . $_SESSION['role']);
 }
-/* é usado um array para comunicação do sensor de todos os lugares:
-  casas negativas são lugares ocupados; casas positivas são lugares livres
-  o valor absoluto do número é usado para representar a orientação da cadeira (1 norte; 2 oeste; 3 sul)
-  0 = vazio/passagem 9 = porta
-  
-  configuração inicial de lugares: 
-  $lugares = [
-    [-1, 1, 0, 2],
-    [3, 3, 0, -2],
-    [-1, 1, 0, 2],
-    [1, 1, 0, 9],
-    [-1, -1, 1, 1]
-  ];
-  $data = serialize($lugares);
-  $filename = './api/files/lugares.txt';
-  file_put_contents($filename, $data);
 
-  Sensores:
-  Sensor de Temperatura
-  Sensor de humidade
-  Sensor de lugar (tantos sensores quantos lugares disponíveis)
-
-  Atuadores:
-  Atuador de nível de luminusidade  (off: 1;baixa: 2;alta: 3)
-  Atuador de portas                 (Fechada: 0 ; Aberta: 1)
-  Aturador de Ventoinha             (Desligada:0 ; Ligada: 1)  Este atuador só é ligado/desligado por um controlador externo
-*/
-
+$veiculo = $_GET['veiculo'];
 //pedido à API pelo array de lugares para construção do dashboard, esta informação (array de lugares) é trocada usando o formato JSON
 $url = 'http://127.0.0.1/projeto';
 //$url = 'https://iot.dei.estg.ipleiria.pt/ti/g168';
-$data = file_get_contents($url . '/api/api.php?valor=lugares&veiculo=' . $_SESSION['role']);
+$data = file_get_contents($url . '/api/api.php?valor=lugares&veiculo=' . $veiculo);
 $lugares = json_decode($data, true);
 $codigoPorta = 9;
 ?>
@@ -60,16 +37,29 @@ $codigoPorta = 9;
   <!-- barra de navegação -->
   <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
-      <a class="navbar-brand" href="dashboard.php">Veículo</a>
-      <button class=" navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <a class="navbar-brand" href="#">SmartDrive</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <ul class="navbar-nav me-auto">
+          <?php
+          if (trim($_SESSION['role']) === 'Admin') {
+            echo '<li class="nav-item">';
+            echo '  <a class="nav-link" href="admin.php"><b>Administração</b> </a>';
+            echo '</li>';
+          }
+          ?>
+          <li class="nav-item active">
+            <a class="nav-link" href="dashboard.php"><?php echo $veiculo ?></a>
+          </li>
           <li class="nav-item">
-            <a class="nav-link" href="historico.php">Histórico</a>
+            <a class="nav-link" href="historico.php?veiculo=<?php echo $_GET['veiculo'] ?>">Histórico</a>
           </li>
         </ul>
+        <span class="navbar-text">
+          user: <b><?php echo $_SESSION['username'] ?></b> &nbsp;
+        </span>
         <form class="d-flex" action="logout.php" method="post">
           <button class="btn btn-outline-success" type="submit">Logout</button>
         </form>
@@ -89,7 +79,7 @@ $codigoPorta = 9;
             <h1 id="temperatura">0</h1>
           </div>
           <div class="card-footer">
-            <h6><a href="historico.php?nome=temperatura">Histórico</a></h6>
+            <h6><a href="historico.php?veiculo=<?php echo $veiculo ?>&amp;nome=temperatura">Histórico</a></h6>
           </div>
         </div>
         <br>
@@ -102,7 +92,7 @@ $codigoPorta = 9;
             <h1 id="humidade">0</h1>
           </div>
           <div class="card-footer">
-            <h6><a href="historico.php?nome=humidade">Histórico</a></h6>
+            <h6><a href="historico.php?veiculo=<?php echo $veiculo ?>&amp;nome=humidade">Histórico</a></h6>
           </div>
         </div>
         <hr>
@@ -142,7 +132,7 @@ $codigoPorta = 9;
               </div>
             </div>
             <hr>
-            <h6><a href="historico.php?nome=ventoinha">Histórico</a></h6>
+            <h6><a href="historico.php?veiculo=<?php echo $veiculo ?>&amp;nome=ventoinha">Histórico</a></h6>
           </div>
         </div>
       </div>
@@ -169,8 +159,7 @@ $codigoPorta = 9;
             </div>
           </div>
           <div class="card-body">
-            <!-- tabela de lugares
-                  construção da tabela de lugares interpretando o array $lugares-->
+
             <table class="table">
               <tbody>
                 <?php
@@ -186,11 +175,11 @@ $codigoPorta = 9;
                       echo ' vazio">';
                     } else if ($posicao == $codigoPorta) {
                       //caso seja uma porta
-                      echo ' porta"><img alt="" class="estado_porta" src="' . $url . 'api/imagens/porta.png" height="80">';
+                      echo ' porta"><img alt="" class="estado_porta" src="' . $url . '/api/imagens/porta.png" height="80">';
                     } else {
                       //é um lugar
                       //Link diferenciado para o histórico do sensor
-                      echo ' lugar"><a href="historico.php?nome=lugar-' . $X . "-" . $Y . '"><img alt="" class="';
+                      echo ' lugar"><a href="historico.php?veiculo=<?php echo $veiculo ?>&amp;nome=lugar-' . $X . "-" . $Y . '"><img alt="" class="';
                       //classe CSS para rotação da imagem (norte não necessita de rotação)
                       switch (abs($posicao)) {
                         case 2:
@@ -201,7 +190,7 @@ $codigoPorta = 9;
                           break;
                       }
                       //id no formato "posicao-X-Y" para monitorização independete do estado de cada sensor de lugar
-                      echo '" id="posicao-' . $X . '-' . $Y . '" src="' . $url . 'api/imagens/lugar.png" height="80"></a>';
+                      echo '" id="posicao-' . $X . '-' . $Y . '" src="' . $url . '/api/imagens/lugar.png" height="80"></a>';
                     }
                     echo '</td>
                     ';
@@ -217,18 +206,15 @@ $codigoPorta = 9;
         </div>
       </div>
       <div class="col-sm-4  flex-column justify-content-around align-content-center">
-        <p class="card-text">Bem vindo user: <b><?php echo $_SESSION['username'] ?></b></p>
-        <!-- Espaço para implentação de video -->
-        <hr>
         <div class="card">
           <div class="card-header">
-            <h4>Iuminação</h4>
+            <h4>Webcam</h4>
           </div>
           <div class="card-body">
-            <?php echo "<img src='api/imagens/webcam.jpg?id=" . time() . "' style='width:100%'>"; ?>
+            <?php echo "<img src='api/files/" . $veiculo . "/webcam/webcam.jpg?id=" . time() . "' style='width:100%'>"; ?>
           </div>
         </div>
-        <hr>
+        <br>
         <div class=" atuadores">
           <!--Atuador de Iluminação
               apresenta os modos de iluminação disponíveis
@@ -246,7 +232,7 @@ $codigoPorta = 9;
               </div>
             </div>
             <div class="card-footer">
-              <h6><a href="historico.php?nome=iluminacao">Histórico</a></h6>
+              <h6><a href="historico.php?veiculo=<?php echo $veiculo ?>&amp;nome=iluminacao">Histórico</a></h6>
             </div>
           </div>
           <!--Atuador de Porta
@@ -264,7 +250,7 @@ $codigoPorta = 9;
               </div>
             </div>
             <div class="card-footer">
-              <h6><a href="historico.php?nome=portas">Histórico</a></h6>
+              <h6><a href="historico.php?veiculo=<?php echo $veiculo ?>&amp;nome=portas">Histórico</a></h6>
             </div>
           </div>
         </div>
@@ -352,7 +338,7 @@ $codigoPorta = 9;
 
     //GET - Atualiza os valores do controlador da ventoinha a partir da API
     function resetControlador() {
-      fetch("./api/api.php?valor=controlador&veiculo=veiculocisco")
+      fetch("./api/api.php?valor=controlador&veiculo=" + veiculo)
         .then(response => response.text())
         .then(data => {
           var inputTemperatura = document.getElementById("controlo_temperatura");

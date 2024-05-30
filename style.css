@@ -45,3 +45,7 @@ body{
 .estado_porta{
   visibility: visible;
 }
+
+.nav-item.active{
+  font-weight: bold;
+}
