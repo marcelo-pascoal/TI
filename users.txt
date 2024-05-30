@@ -1,3 +1,0 @@
-teste;$2y$10$KRQ9mUzf3ixLgesYtp3/cesdcpzpv7n3GeAw7/tj9x6MSerYqCLo.
-user;$2y$10$KRQ9mUzf3ixLgesYtp3/cesdcpzpv7n3GeAw7/tj9x6MSerYqCLo.
-admin;$2y$10$KRQ9mUzf3ixLgesYtp3/cesdcpzpv7n3GeAw7/tj9x6MSerYqCLo.

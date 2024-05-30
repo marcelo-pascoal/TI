@@ -7,20 +7,9 @@
 #               o utilizador é redireccionado para o dashboard
 #               o username é defenido como variável de sessão para posterior verificação. 
 session_start();
-$loginFalhado = false;
-if (isset($_POST['username']) && isset($_POST['password'])) {
-    $users = fopen("./users.txt", "r") or http_response_code(500) && die("Erro ao abrir ficheiro");
-    while (!feof($users)) {
-        $linha = explode(";", fgets($users));
-        if (strcmp($linha[0], $_POST['username']) && password_verify($_POST['password'], $linha[1])) {
-            $_SESSION["username"] = $_POST['username'];
-            fclose($users);
-            header("Location: dashboard.php");
-        } else {
-            $loginFalhado = true;
-        }
-    }
-    fclose($users);
+if (isset($_SESSION["username"])) {
+    header("Location: dashboard.php");
+    exit;
 }
 ?>
 <!doctype html>
@@ -51,7 +40,7 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
 <body>
     <div class="container">
         <div class="row">
-            <form class=" login" method="post">
+            <form class=" login" method="post" action="api/login.php">
                 <h2 class="index">Login</h2>
                 <div class="mb-3">
                     <label for="username" class="form-label">Username</label>
@@ -64,7 +53,7 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
                 </div>
                 <!--caso o login tenha falhado o utilizador é notificado-->
                 <div class="flex row">
-                    <?php if ($loginFalhado)
+                    <?php if ($_SERVER["REQUEST_METHOD"] == "POST")
                         echo '<p class="erro">Credenciais inválidas</p>';
                     ?>
                     <button type="submit" class="btn btn-primary">Login</button>

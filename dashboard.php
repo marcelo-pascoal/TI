@@ -5,6 +5,10 @@ if (!isset($_SESSION['username'])) {
   header("refresh:5;url=index.php");
   die("Acesso restrito.");
 }
+if (!isset($_GET['veiculo'])) {
+  header("refresh:.4;dashboard.php?veiculo=" . $_SESSION['role']);
+  die("A redirecionar.");
+}
 /* é usado um array para comunicação do sensor de todos os lugares:
   casas negativas são lugares ocupados; casas positivas são lugares livres
   o valor absoluto do número é usado para representar a orientação da cadeira (1 norte; 2 oeste; 3 sul)
@@ -36,7 +40,7 @@ if (!isset($_SESSION['username'])) {
 //pedido à API pelo array de lugares para construção do dashboard, esta informação (array de lugares) é trocada usando o formato JSON
 $url = 'http://127.0.0.1/projeto';
 //$url = 'https://iot.dei.estg.ipleiria.pt/ti/g168';
-$data = file_get_contents($url . '/api/api.php?valor=lugares');
+$data = file_get_contents($url . '/api/api.php?valor=lugares&veiculo=veiculocisco');
 $lugares = json_decode($data, true);
 $codigoPorta = 9;
 ?>
@@ -216,7 +220,14 @@ $codigoPorta = 9;
         <p class="card-text">Bem vindo user: <b><?php echo $_SESSION['username'] ?></b></p>
         <!-- Espaço para implentação de video -->
         <hr>
-        <img alt="" src="imagens/webcam.jpg" style="width: 100%;">
+        <div class="card">
+          <div class="card-header">
+            <h4>Iuminação</h4>
+          </div>
+          <div class="card-body">
+            <?php echo "<img src='api/imagens/webcam.jpg?id=" . time() . "' style='width:100%'>"; ?>
+          </div>
+        </div>
         <hr>
         <div class=" atuadores">
           <!--Atuador de Iluminação
@@ -264,9 +275,19 @@ $codigoPorta = 9;
 
   <script>
     // uso da função setInterval() para atualizacao dos componentes da dashboard
+
+
+    const searchParams = new URLSearchParams(window.location.search);
+    var veiculo = searchParams.get('role');;
+    setVeiculo();
     const intervalSensores = setInterval(updateEstados, 2000);
+
     updateEstados();
     resetControlador();
+
+    function setVeiculo() {
+      this.veiculo = searchParams.get('veiculo');
+    }
 
     //função fornecida pelos docentes para criação de timestamp
     function getHora() {
@@ -282,6 +303,7 @@ $codigoPorta = 9;
     function toggleIluminacao(valor) {
       const data = new URLSearchParams({
         nome: "iluminacao",
+        veiculo: veiculo,
         valor: valor,
         hora: getHora()
       });
@@ -298,6 +320,7 @@ $codigoPorta = 9;
     function togglePortas(valor) {
       const data = new URLSearchParams({
         nome: "portas",
+        veiculo: veiculo,
         valor: valor,
         hora: getHora()
       });
@@ -314,6 +337,7 @@ $codigoPorta = 9;
     function saveControlador() {
       const data = new URLSearchParams({
         nome: "controlador",
+        veiculo: veiculo,
         temperatura: document.getElementById("controlo_temperatura").value,
         humidade: document.getElementById("controlo_humidade").value
       });
@@ -328,7 +352,7 @@ $codigoPorta = 9;
 
     //GET - Atualiza os valores do controlador da ventoinha a partir da API
     function resetControlador() {
-      fetch("./api/api.php?valor=controlador")
+      fetch("./api/api.php?valor=controlador&veiculo=veiculocisco")
         .then(response => response.text())
         .then(data => {
           var inputTemperatura = document.getElementById("controlo_temperatura");
@@ -344,19 +368,19 @@ $codigoPorta = 9;
     //Atualiza a dashboard fazendo pedidos (GET) da informação de todos o ssensores e atuadores à API
     function updateEstados() {
       //Sensor Temperatura - atualiza o campo de texto com o valor da temperatura
-      fetch("./api/api.php?valor=temperatura")
+      fetch("./api/api.php?valor=temperatura&veiculo=" + veiculo)
         .then(response => response.text())
         .then(data => document.getElementById("temperatura").innerHTML = data + "ºC")
         .catch(error => console.error(error));
 
       //Sensor Humidade - atualiza o campo de texto com o valor da humidade
-      fetch("./api/api.php?valor=humidade")
+      fetch("./api/api.php?valor=humidade&veiculo=" + veiculo)
         .then(response => response.text())
         .then(data => document.getElementById("humidade").innerHTML = data + "%")
         .catch(error => console.error(error));
 
       //Controlador Ventoinha - adiciona ou remove a class 'ocupado' à imagem da ventoinha
-      fetch("./api/api.php?valor=ventoinha")
+      fetch("./api/api.php?valor=ventoinha&veiculo=" + veiculo)
         .then(response => response.text())
         .then(data => {
           var fanImage = document.getElementById('ventoinha');
@@ -367,7 +391,7 @@ $codigoPorta = 9;
 
       //Atuador Iluminacao - altera a cor de fundo (já associado às celulas da tabela de lugares) de acordo com o nivel de luminusidade
       //                   - coloca o butão correspondente como desativo, e os restantes como ativos
-      fetch("./api/api.php?valor=iluminacao")
+      fetch("./api/api.php?valor=iluminacao&veiculo=" + veiculo)
         .then(response => response.text())
         .then(data => {
           const styleSheet = document.styleSheets[0];
@@ -401,7 +425,7 @@ $codigoPorta = 9;
       //Atuador Portas - altera o atribulo "src" da imgem com o id "imagem_portas" (fechadas / abertas)
       //               - altera a classe do butão de controlo de portas (success / danger)
       //               - adiciona ou remove a class 'visible' à imagem da porta na tabela de lugares
-      fetch("./api/api.php?valor=portas")
+      fetch("./api/api.php?valor=portas&veiculo=" + veiculo)
         .then(response => response.text())
         .then(data => {
           const styleSheet = document.styleSheets[0];
@@ -435,7 +459,7 @@ $codigoPorta = 9;
       //Atualização dos lugares ocupados
       //  - volta a pedir o array de lugares à API, para os lugares apenas é tido em conta o sinal de cada posição
 
-      fetch("./api/api.php?valor=lugares")
+      fetch("./api/api.php?valor=lugares&veiculo=" + veiculo)
         .then(response => response.text())
         .then(data => {
           const lugares = JSON.parse(data);
