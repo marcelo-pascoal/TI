@@ -40,7 +40,7 @@ if (!isset($_GET['veiculo'])) {
 //pedido à API pelo array de lugares para construção do dashboard, esta informação (array de lugares) é trocada usando o formato JSON
 $url = 'http://127.0.0.1/projeto';
 //$url = 'https://iot.dei.estg.ipleiria.pt/ti/g168';
-$data = file_get_contents($url . '/api/api.php?valor=lugares&veiculo=veiculocisco');
+$data = file_get_contents($url . '/api/api.php?valor=lugares&veiculo=' . $_SESSION['role']);
 $lugares = json_decode($data, true);
 $codigoPorta = 9;
 ?>
@@ -115,7 +115,7 @@ $codigoPorta = 9;
             <!--O controlo de ligamento/desligamento da ventoinha deverá ser desenvolvido usando um controlador externo
                 Este campo apenas permite configurar os parametros para controlo
                 Caso o estado do atuador da ventoinha seja alterado, a imagem é atualizada de correspondedn ao estado atual-->
-            <img alt="" src="imagens/fan.png " width="100" id="ventoinha">
+            <img alt="" src="api/imagens/fan.png " width="100" id="ventoinha">
             <!-- envio de pedido post com as configurações -->
             <div class=" flex-column justify-content-around align-content-center">
               <button type="button" class="btn btn-warning btn-sm" onclick="resetControlador();">RESET</button>
@@ -127,13 +127,13 @@ $codigoPorta = 9;
             <!-- valores a serem usados para atualizar o controlador -->
             <div class="d-flex">
               <div class="col-sm-3">
-                <img alt="" src="imagens/temperature-high.png " width="30">
+                <img alt="" src="api/imagens/temperature-high.png " width="30">
               </div>
               <div class="col-sm-3">
                 <input type="text" style="width: 30px;" id="controlo_temperatura">
               </div>
               <div class="col-sm-3">
-                <img alt="" src="imagens/humidity-high.png " width="30">
+                <img alt="" src="api/imagens/humidity-high.png " width="30">
               </div>
               <div class="col-sm-3">
                 <input type="text" style="width: 30px;" id="controlo_humidade">
@@ -186,7 +186,7 @@ $codigoPorta = 9;
                       echo ' vazio">';
                     } else if ($posicao == $codigoPorta) {
                       //caso seja uma porta
-                      echo ' porta"><img alt="" class="estado_porta" src="' . $url . '/imagens/porta.png" height="80">';
+                      echo ' porta"><img alt="" class="estado_porta" src="' . $url . 'api/imagens/porta.png" height="80">';
                     } else {
                       //é um lugar
                       //Link diferenciado para o histórico do sensor
@@ -201,7 +201,7 @@ $codigoPorta = 9;
                           break;
                       }
                       //id no formato "posicao-X-Y" para monitorização independete do estado de cada sensor de lugar
-                      echo '" id="posicao-' . $X . '-' . $Y . '" src="' . $url . '/imagens/lugar.png" height="80"></a>';
+                      echo '" id="posicao-' . $X . '-' . $Y . '" src="' . $url . 'api/imagens/lugar.png" height="80"></a>';
                     }
                     echo '</td>
                     ';
@@ -259,7 +259,7 @@ $codigoPorta = 9;
             <div class="card-body">
               <div class="justify-content-around align-content-center" style="height: 35vh;">
                 <h4 id="estado_portas">Fechadas</h4>
-                <img alt="" src="imagens/abrir_portas.png" width="100" id="imagem_portas">
+                <img alt="" src="api/imagens/abrir_portas.png" width="100" id="imagem_portas">
                 <button type="button" class="btn btn-success" onclick="togglePortas(1);" id="butao_portas">Abrir</button>
               </div>
             </div>
@@ -433,7 +433,7 @@ $codigoPorta = 9;
           var imagem = document.getElementById("imagem_portas");
           var butao = document.getElementById('butao_portas');
           if (data == "0") {
-            imagem.src = "imagens/abrir_portas.png";
+            imagem.src = "api/imagens/abrir_portas.png";
             butao.classList.remove('btn-danger');
             butao.classList.add('btn-success');
             butao.innerHTML = "Abrir";
@@ -443,7 +443,7 @@ $codigoPorta = 9;
               togglePortas(1);
             }
           } else if (data == "1") {
-            imagem.src = "imagens/fechar_portas.png";
+            imagem.src = "api/imagens/fechar_portas.png";
             butao.classList.remove('btn-success');
             butao.classList.add('btn-danger');
             butao.innerHTML = "Fechar";
