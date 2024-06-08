@@ -245,7 +245,7 @@ $codigoPorta = 9;
             <div class="card-body">
               <div class="justify-content-around align-content-center" style="height: 35vh;">
                 <h4 id="estado_portas">Fechadas</h4>
-                <img alt="" src="api/imagens/abrir_portas.png" width="100" id="imagem_portas">
+                <img alt="" src="api/imagens/portas_abertas.png" width="100" id="imagem_portas">
                 <button type="button" class="btn btn-success" onclick="togglePortas(1);" id="butao_portas">Abrir</button>
               </div>
             </div>
@@ -418,25 +418,39 @@ $codigoPorta = 9;
           const ruleIndex = Array.from(styleSheet.cssRules).findIndex(rule => rule.selectorText === ".estado_porta");
           var imagem = document.getElementById("imagem_portas");
           var butao = document.getElementById('butao_portas');
-          if (data == "0") {
-            imagem.src = "api/imagens/abrir_portas.png";
+
+          if (data == "2") {
+            imagem.src = "api/imagens/portas_fechadas.png";
             butao.classList.remove('btn-danger');
+            butao.classList.remove('btn-warning');
             butao.classList.add('btn-success');
             butao.innerHTML = "Abrir";
             (styleSheet.cssRules[ruleIndex]).style.setProperty("visibility", "visible");
             document.getElementById("estado_portas").innerHTML = "Fechadas";
             butao.onclick = function() {
-              togglePortas(1);
+              togglePortas(0);
             }
           } else if (data == "1") {
-            imagem.src = "api/imagens/fechar_portas.png";
+            imagem.src = "api/imagens/portas_fechar.png";
             butao.classList.remove('btn-success');
+            butao.classList.remove('btn-danger');
+            butao.classList.add('btn-warning');
+            butao.innerHTML = "Cancelar";
+            (styleSheet.cssRules[ruleIndex]).style.setProperty("visibility", "hidden");
+            document.getElementById("estado_portas").innerHTML = "A fechar";
+            butao.onclick = function() {
+              togglePortas(0);
+            }
+          } else if (data == "0") {
+            imagem.src = "api/imagens/portas_abertas.png";
+            butao.classList.remove('btn-success');
+            butao.classList.remove('btn-warning');
             butao.classList.add('btn-danger');
             butao.innerHTML = "Fechar";
             (styleSheet.cssRules[ruleIndex]).style.setProperty("visibility", "hidden");
             document.getElementById("estado_portas").innerHTML = "Abertas";
             butao.onclick = function() {
-              togglePortas(0);
+              togglePortas(1);
             }
           }
         })
