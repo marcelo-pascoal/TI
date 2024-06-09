@@ -1,4 +1,4 @@
 admin;$2y$10$KRQ9mUzf3ixLgesYtp3/cesdcpzpv7n3GeAw7/tj9x6MSerYqCLo.;Admin
 security$2y$10$KRQ9mUzf3ixLgesYtp3/cesdcpzpv7n3GeAw7/tj9x6MSerYqCLo.;Security
-teste;$2y$10$KRQ9mUzf3ixLgesYtp3/cesdcpzpv7n3GeAw7/tj9x6MSerYqCLo.;veiculocisco
-user;$2y$10$KRQ9mUzf3ixLgesYtp3/cesdcpzpv7n3GeAw7/tj9x6MSerYqCLo.;veiculocisco2
+cisco;$2y$10$KRQ9mUzf3ixLgesYtp3/cesdcpzpv7n3GeAw7/tj9x6MSerYqCLo.;veiculocisco
+labs;$2y$10$KRQ9mUzf3ixLgesYtp3/cesdcpzpv7n3GeAw7/tj9x6MSerYqCLo.;veiculolabs

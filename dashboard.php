@@ -211,7 +211,7 @@ $codigoPorta = 9;
             <h4>Webcam</h4>
           </div>
           <div class="card-body">
-            <?php echo "<img src='api/files/" . $veiculo . "/webcam/webcam.jpg?id=" . time() . "' style='width:100%'>"; ?>
+            <?php echo "<img src='api/files/" . $veiculo . "/webcam.jpg?id=" . time() . "' style='width:100%'>"; ?>
           </div>
         </div>
         <br>

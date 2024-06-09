@@ -51,7 +51,7 @@ if (!isset($_SESSION['username']) || trim($_SESSION['role']) !== 'Admin') {
                 echo '      <div class="card-header">';
                 echo '          <h6>' . $veiculo . '</h6>';
                 echo '      <div class="card-body">';
-                echo "          <img src='api/files/" . $veiculo . "/webcam/webcam.jpg' style='width:100%'>";
+                echo "          <img src='api/files/" . $veiculo . "/webcam.jpg' style='width:100%'>";
                 echo '      </div>';
                 echo '      <div class="card-footer">';
                 echo '          <h6><a href="dashboard.php?veiculo=' . $veiculo . '">Gerir</a></h6>';
