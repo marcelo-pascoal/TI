@@ -208,10 +208,14 @@ $codigoPorta = 9;
       <div class="col-sm-4  flex-column justify-content-around align-content-center">
         <div class="card">
           <div class="card-header">
+            <!--webcam-->
             <h4>Webcam</h4>
           </div>
           <div class="card-body">
-            <?php echo "<img src='api/files/" . $veiculo . "/webcam.jpg?id=" . time() . "' style='width:100%'>"; ?>
+            <?php
+             echo "<img id='webcam_image' src='api/files/" . $veiculo . "/webcam/webcam.jpg?id=" . time() . "' style='width:100%' >"; 
+             ?>
+            <!--img id="webcam1" alt="" src="api/imagens/portas_abertas.png" width="100" id="imagem_portas"-->
           </div>
         </div>
         <br>
@@ -353,6 +357,8 @@ $codigoPorta = 9;
 
     //Atualiza a dashboard fazendo pedidos (GET) da informação de todos o ssensores e atuadores à API
     function updateEstados() {
+      
+
       //Sensor Temperatura - atualiza o campo de texto com o valor da temperatura
       fetch("./api/api.php?valor=temperatura&veiculo=" + veiculo)
         .then(response => response.text())
@@ -456,6 +462,13 @@ $codigoPorta = 9;
         })
         .catch(error => console.error(error));
 
+
+        
+      //atualiza camera
+      var img = document.getElementById('webcam_image');
+      var currentTime = new Date().getTime(); 
+      img.src = "api/files/<?php echo $veiculo; ?>/webcam/webcam.jpg?id=" + currentTime ;
+      
       //Atualização dos lugares ocupados
       //  - volta a pedir o array de lugares à API, para os lugares apenas é tido em conta o sinal de cada posição
 
