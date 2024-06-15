@@ -1,11 +1,11 @@
 <?php
 session_start();
 if (!isset($_SESSION['username'])) {
-  header("refresh:5;url=index.php");
+  header("refresh:1;url=index.php");
   die("Acesso restrito.");
 }
 if (!isset($_GET['veiculo']) || !is_dir("api/files/" . $_GET['veiculo'])) {
-  header("refresh:2;url=index.php");
+  header("refresh:1;url=index.php");
   die("Acesso iválido.");
 }
 
@@ -27,7 +27,7 @@ foreach ($contents as $item) {
 }
 //valida os parametros do pedido GET para exebição da histórico
 if (isset($_GET['nome']) && !in_array($_GET['nome'], $valid_names)) {
-  header("refresh:2;url=historico.php");
+  header("refresh:1;url=historico.php");
   die("Historico Inválido.");
 }
 ?>
@@ -70,7 +70,7 @@ if (isset($_GET['nome']) && !in_array($_GET['nome'], $valid_names)) {
         <span class="navbar-text">
           user: <b><?php echo $_SESSION['username'] ?></b> &nbsp;
         </span>
-        <form class="d-flex" action="logout.php" method="post">
+        <form class="d-flex" action="api/logout.php" method="post">
           <button class="btn btn-outline-success" type="submit">Logout</button>
         </form>
       </div>

@@ -2,7 +2,7 @@
 /*Verifica se foi inicializada a variavel de sessao username*/
 session_start();
 if (!isset($_SESSION['username']) || trim($_SESSION['role']) !== 'Admin') {
-    header("refresh:2;url=index.php");
+    header("refresh:1;url=index.php");
     die("Acesso restrito.");
 }
 
@@ -31,7 +31,7 @@ if (!isset($_SESSION['username']) || trim($_SESSION['role']) !== 'Admin') {
             <span class="navbar-text">
                 user: <b><?php echo $_SESSION['username'] ?></b> &nbsp;
             </span>
-            <form class="d-flex" action="logout.php" method="post">
+            <form class="d-flex" action="api/logout.php" method="post">
                 <button class="btn btn-outline-success" type="submit">Logout</button>
             </form>
         </div>
