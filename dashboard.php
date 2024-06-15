@@ -217,7 +217,7 @@ $codigoPorta = 9;
           </div>
           <div class="card-body">
             <?php
-            echo "<img id='webcam_image' src='api/files/" . $veiculo . "/webcam/webcam.jpg?id=" . time() . "' style='width:100%' >";
+            echo "<img id='webcam_image' src='api/files/" . $veiculo . "/webcam.jpg?id=" . time() . "' style='width:100%' >";
             ?>
             <!--img id="webcam1" alt="" src="api/imagens/portas_abertas.png" width="100" id="imagem_portas"-->
           </div>
