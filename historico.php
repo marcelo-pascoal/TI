@@ -9,7 +9,7 @@ if (!isset($_GET['veiculo']) || !is_dir("api/files/" . $_GET['veiculo'])) {
   die("Acesso iválido.");
 }
 
-$url = 'http://127.0.0.1/projeto';
+$url = 'http://127.0.0.1/projeto/api/api.php?veiculo=' . $_GET['veiculo'];
 //$url = 'https://iot.dei.estg.ipleiria.pt/ti/g168';
 
 
@@ -56,15 +56,15 @@ if (isset($_GET['nome']) && !in_array($_GET['nome'], $valid_names)) {
           <?php
           if (trim($_SESSION['role']) === 'Admin') {
             echo '<li class="nav-item">';
-            echo '  <a class="nav-link" href="admin.php"><b>Administração</b> </a>';
+            echo '  <a class="nav-link" href="admin.php">Administração</a>';
             echo '</li>';
           }
           ?>
           <li class="nav-item">
-            <a class="nav-link" href="dashboard.php"><?php echo $_GET['veiculo'] ?></a>
+            <a class="nav-link" href="dashboard.php?veiculo=<?php echo $_GET['veiculo'] ?>"><?php echo $_GET['veiculo'] ?></a>
           </li>
           <li class="nav-item active">
-            <a class="nav-link" href="historico.php?veiculo=<?php echo $_GET['veiculo'] ?>">Histórico</a>
+            <a class="nav-link">Histórico</a>
           </li>
         </ul>
         <span class="navbar-text">
@@ -81,7 +81,7 @@ if (isset($_GET['nome']) && !in_array($_GET['nome'], $valid_names)) {
   <div class="card">
     <div class="card-header">
       <!--Apresenta o conteúdo do ficheiro nome.txt do dispositivo pretendido-->
-      <h1><?php if (isset($_GET['nome']) && $_GET['nome'] != "") echo file_get_contents($url . '/api/api.php?veiculo=' . $_GET['veiculo'] . '&nome=' . $_GET['nome']); ?></h1>
+      <h1><?php if (isset($_GET['nome']) && $_GET['nome'] != "") echo file_get_contents($url . '&nome=' . $_GET['nome']); ?></h1>
     </div>
     <div class="card-body">
       <table class="table">
@@ -92,7 +92,7 @@ if (isset($_GET['nome']) && !in_array($_GET['nome'], $valid_names)) {
         <!--Apresenta o conteúdo do ficheiro log.txt do dispositivo pretendido-->
         <?php
         if (isset($_GET['nome']) && $_GET['nome'] != "") {
-          $linhasLog = file($url . '/api/api.php?veiculo=' . $_GET['veiculo'] . '&log=' . $_GET['nome']);
+          $linhasLog = file($url . '&log=' . $_GET['nome']);
           foreach ($linhasLog as $linha) {
             echo "<tr><td>";
             print_r(explode(';', $linha)[0]);

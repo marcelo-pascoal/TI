@@ -1,11 +1,10 @@
 <?php
 session_start();
 if (isset($_SESSION["username"])) {
-    if(trim($_SESSION['role']) !== 'Admin'){
+    if (trim($_SESSION['role']) === "Admin") {
         header("Location: admin.php");
     }
     header("Location: dashboard.php");
-    exit;
 }
 ?>
 

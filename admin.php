@@ -25,7 +25,7 @@ if (!isset($_SESSION['username']) || trim($_SESSION['role']) !== 'Admin') {
             <a class="navbar-brand">SmartDrive</a>
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item active">
-                    <a class="nav-link" href="admin.php"><b>Administração</b> </a>
+                    <a class="nav-link">Administração </a>
                 </li>
             </ul>
             <span class="navbar-text">

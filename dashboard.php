@@ -5,14 +5,18 @@ if (!isset($_SESSION['username'])) {
   header("refresh:5;url=index.php");
   die("Acesso restrito.");
 }
-/*Verifica se existe a variavel veiculo*/
-if (!isset($_GET['veiculo'])) {
+/*Verifica se existe a variavel veiculo e se esta é válida*/
+if (!isset($_GET['veiculo']) || !is_dir("api/files/" . $_GET['veiculo'])) {
   if (trim($_SESSION['role']) === 'Admin') {
     header("Location: admin.php");
+  } else {
+    header("Location: dashboard.php?veiculo=" . $_SESSION['role']);
   }
+  exit;
+}
+if (trim($_SESSION['role']) !== 'Admin' && trim($_SESSION['role']) !== $_GET['veiculo']) {
   header("Location: dashboard.php?veiculo=" . $_SESSION['role']);
 }
-
 $veiculo = $_GET['veiculo'];
 //pedido à API pelo array de lugares para construção do dashboard, esta informação (array de lugares) é trocada usando o formato JSON
 $url = 'http://127.0.0.1/projeto';
@@ -46,12 +50,12 @@ $codigoPorta = 9;
           <?php
           if (trim($_SESSION['role']) === 'Admin') {
             echo '<li class="nav-item">';
-            echo '  <a class="nav-link" href="admin.php"><b>Administração</b> </a>';
+            echo '  <a class="nav-link" href="admin.php">Administração </a>';
             echo '</li>';
           }
           ?>
           <li class="nav-item active">
-            <a class="nav-link" href="dashboard.php"><?php echo $veiculo ?></a>
+            <a class="nav-link"><?php echo $veiculo ?></a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="historico.php?veiculo=<?php echo $_GET['veiculo'] ?>">Histórico</a>
@@ -213,8 +217,8 @@ $codigoPorta = 9;
           </div>
           <div class="card-body">
             <?php
-             echo "<img id='webcam_image' src='api/files/" . $veiculo . "/webcam/webcam.jpg?id=" . time() . "' style='width:100%' >"; 
-             ?>
+            echo "<img id='webcam_image' src='api/files/" . $veiculo . "/webcam/webcam.jpg?id=" . time() . "' style='width:100%' >";
+            ?>
             <!--img id="webcam1" alt="" src="api/imagens/portas_abertas.png" width="100" id="imagem_portas"-->
           </div>
         </div>
@@ -357,7 +361,6 @@ $codigoPorta = 9;
 
     //Atualiza a dashboard fazendo pedidos (GET) da informação de todos o ssensores e atuadores à API
     function updateEstados() {
-      
 
       //Sensor Temperatura - atualiza o campo de texto com o valor da temperatura
       fetch("./api/api.php?valor=temperatura&veiculo=" + veiculo)
@@ -462,16 +465,13 @@ $codigoPorta = 9;
         })
         .catch(error => console.error(error));
 
-
-        
       //atualiza camera
       var img = document.getElementById('webcam_image');
-      var currentTime = new Date().getTime(); 
-      img.src = "api/files/<?php echo $veiculo; ?>/webcam/webcam.jpg?id=" + currentTime ;
-      
+      var currentTime = new Date().getTime();
+      img.src = "api/files/<?php echo $veiculo; ?>/webcam.jpg?id=" + currentTime;
+
       //Atualização dos lugares ocupados
       //  - volta a pedir o array de lugares à API, para os lugares apenas é tido em conta o sinal de cada posição
-
       fetch("./api/api.php?valor=lugares&veiculo=" + veiculo)
         .then(response => response.text())
         .then(data => {
